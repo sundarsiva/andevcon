@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Lab2</string>
+
+    <string name="action_about">About</string>
+    <string name="email_label">eMail:</string>
+    <string name="find_button">Find Me</string>
+    <string name="name_label">Name:</string>
+    <string name="male_label">Male</string>
+    <string name="female_label">Female</string>
+    <string name="senior_label">Senior Citizen</string>
+    <string name="favorite_sport_label">Favorite Sport:</string>
+    <string name="favorite_team_label">Favorite Team:</string>
+    <string name="submit_button">Submit</string>
+    <string name="data_saved">Data saved!</string>
+    <string name="data_needed">eMail required!</string>
+    <string name="email_hint">Your eMail</string>
+    <string name="name_hint">Your name</string>
+    <string name="team_hint">Your favorite team</string>
+    <string name="about_title">AnDevCon</string>
+    <string name="about_message">Welcome to AnDevCon Santa Clara 2015</string>
+
+    <array name="sports_list">
+        <item>Baseball</item>
+        <item>Basketball</item>
+        <item>Football</item>
+        <item>Hockey</item>
+        <item>Soccer</item>
+    </array>
+</resources>

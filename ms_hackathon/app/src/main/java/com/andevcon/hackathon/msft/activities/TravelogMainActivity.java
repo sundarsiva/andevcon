@@ -34,8 +34,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.fragments.TravelogListFragment;
-import com.support.android.designlibdemo.R;
 
 import java.util.ArrayList;
 import java.util.List;

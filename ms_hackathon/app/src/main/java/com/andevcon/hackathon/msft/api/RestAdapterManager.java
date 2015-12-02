@@ -1,9 +1,9 @@
 package com.andevcon.hackathon.msft.api;
 
+import com.andevcon.hackathon.msft.BuildConfig;
 import com.andevcon.hackathon.msft.helpers.Constants;
 import com.microsoft.office365.connectmicrosoftgraph.AuthenticationManager;
 import com.squareup.okhttp.OkHttpClient;
-import com.support.android.designlibdemo.BuildConfig;
 
 import java.util.concurrent.TimeUnit;
 

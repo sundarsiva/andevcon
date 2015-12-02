@@ -24,9 +24,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.ImageView;
 
+import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.model.Images;
 import com.squareup.picasso.Picasso;
-import com.support.android.designlibdemo.R;
 
 public class DetailActivity extends AppCompatActivity {
 

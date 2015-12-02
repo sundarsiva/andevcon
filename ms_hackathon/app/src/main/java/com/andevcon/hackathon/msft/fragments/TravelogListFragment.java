@@ -30,10 +30,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.activities.DetailActivity;
-import com.squareup.picasso.Picasso;
 import com.andevcon.hackathon.msft.model.Images;
-import com.support.android.designlibdemo.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;

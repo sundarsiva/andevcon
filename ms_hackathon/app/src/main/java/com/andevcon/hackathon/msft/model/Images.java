@@ -16,7 +16,8 @@
 
 package com.andevcon.hackathon.msft.model;
 
-import com.support.android.designlibdemo.R;
+
+import com.andevcon.hackathon.msft.R;
 
 import java.util.Random;
 

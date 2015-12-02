@@ -7,13 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.helpers.Constants;
 import com.microsoft.aad.adal.AuthenticationCallback;
 import com.microsoft.aad.adal.AuthenticationCancelError;
 import com.microsoft.aad.adal.AuthenticationResult;
 import com.microsoft.aad.adal.UserInfo;
 import com.microsoft.office365.connectmicrosoftgraph.AuthenticationManager;
-import com.support.android.designlibdemo.R;
 
 import java.net.URI;
 import java.util.UUID;

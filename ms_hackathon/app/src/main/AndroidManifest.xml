@@ -19,7 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.andevcon.hackathon.msft.activities.TravelogMainActivity" />
+        <activity android:name=".activities.TravelogMainActivity" />
+        <activity android:name=".activities.CreatePostActivity"
+            android:parentActivityName=".activities.TravelogMainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.TravelogMainActivity" />
+        </activity>
 
         <activity android:name=".activities.DetailActivity"
             android:parentActivityName=".activities.TravelogMainActivity">

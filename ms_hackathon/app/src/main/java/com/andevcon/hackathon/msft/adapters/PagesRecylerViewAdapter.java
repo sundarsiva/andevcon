@@ -1,7 +1,6 @@
 package com.andevcon.hackathon.msft.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andevcon.hackathon.msft.R;
-import com.andevcon.hackathon.msft.activities.DetailActivity;
 import com.andevcon.hackathon.msft.model.Images;
 import com.microsoft.onenotevos.Page;
 import com.squareup.picasso.Picasso;
@@ -23,6 +21,12 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
     private final TypedValue mTypedValue = new TypedValue();
     private int mBackground;
     private List<Page> mValues;
+    private ClickListener listener;
+
+    public interface ClickListener {
+        void onClickListener(Page page, int position);
+        void onLongClickListener(Page page, int position, View view);
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public String mBoundString;
@@ -48,10 +52,11 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
         return mValues.get(position);
     }
 
-    public PagesRecylerViewAdapter(Context context, List<Page> items) {
+    public PagesRecylerViewAdapter(Context context, List<Page> items, ClickListener listener) {
         context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
         mBackground = mTypedValue.resourceId;
         mValues = items;
+        this.listener = listener;
     }
 
     @Override
@@ -63,7 +68,7 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Page page = mValues.get(position);
         holder.mBoundString = page.title;
         holder.mTextView.setText(page.title);
@@ -71,11 +76,16 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra(DetailActivity.EXTRA_PAGE_ID, page.id);
-                intent.putExtra(DetailActivity.EXTRA_PAGE_NAME, page.title);
-                context.startActivity(intent);
+                listener.onClickListener(page, position);
+            }
+        });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View view) {
+                listener.onLongClickListener(page, position, view);
+                return true;
             }
         });
 

@@ -16,12 +16,12 @@
 
 package com.andevcon.hackathon.msft.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -44,7 +44,6 @@ import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.PagesListFragment;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Section;
-import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -70,8 +69,10 @@ public class TravelogMainActivity extends AppCompatActivity {
 
     public static final String TAG = TravelogMainActivity.class.getCanonicalName();
 
-    ViewPager mViewPager;
-    TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
+    private Adapter mAdapter;
+    private Section[] mSections;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +106,9 @@ public class TravelogMainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                launchNewPageActivity();
             }
         });
 
@@ -141,6 +143,13 @@ public class TravelogMainActivity extends AppCompatActivity {
 
     }
 
+    private void launchNewPageActivity() {
+        String sectionId = mSections[mViewPager.getCurrentItem()].id;
+        Intent i = new Intent(this, CreatePostActivity.class);
+        i.putExtra(CreatePostActivity.EXTRA_SECTION_ID, sectionId);
+        startActivity(i);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.sample_actions, menu);
@@ -158,15 +167,15 @@ public class TravelogMainActivity extends AppCompatActivity {
     }
 
     public void fetchSections() {
-        final Adapter adapter = new Adapter(getSupportFragmentManager());
+        mAdapter = new Adapter(getSupportFragmentManager());
         ApiClient.apiService.getSections(new Callback<Envelope<Section>>() {
             @Override
             public void success(Envelope<Section> sectionEnvelope, Response response) {
-                Section[] sections = sectionEnvelope.value;
-                for(Section section: sections) {
-                    adapter.addFragment(PagesListFragment.newInstance(section.id), section.name);
+                mSections = sectionEnvelope.value;
+                for(Section section: mSections) {
+                    mAdapter.addFragment(PagesListFragment.newInstance(section.id), section.name);
                 }
-                setupViewPager(adapter);
+                setupViewPager(mAdapter);
             }
 
             @Override
@@ -177,6 +186,7 @@ public class TravelogMainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(Adapter adapter) {
+        mViewPager.setOffscreenPageLimit(mSections.length);
         mViewPager.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mTabLayout.setupWithViewPager(mViewPager);

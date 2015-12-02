@@ -1,5 +1,6 @@
 package com.andevcon.hackathon.msft.api;
 
+import com.andevcon.hackathon.msft.helpers.Constants;
 import com.andevcon.hackathon.msft.model.sample.SampleRequestBody;
 import com.andevcon.hackathon.msft.model.sample.SampleResponseBody;
 import com.microsoft.onenotevos.Envelope;
@@ -20,22 +21,16 @@ import retrofit.http.Path;
 public class ApiClient {
 
     private static final String
-            GET_SAMPLE_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint",
             GET_PAGES_FROM_SECTION_URL = "/me/notes/sections/{sectionId}/pages",
             GET_SECTIONS_URL = "/me/notes/sections",
             GET_USERS_URL = "/me/photo/$value",
             GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content";
 
-    static RestAdapter getTraveLogRestAdapter() {
-        return RestAdapterManager.getInstance().createRestAdapter();
+    static RestAdapter getTraveLogRestAdapter(String baseUrl) {
+        return RestAdapterManager.getInstance().createRestAdapter(baseUrl);
     }
 
     public interface ApiService {
-
-        @GET(GET_SAMPLE_ENDPOINT_URL)
-        void getSampleMethod(@Path("sampleParam") String sampleParam,
-                          @Body SampleRequestBody request,
-                          Callback<SampleResponseBody> callback);
 
         @GET(GET_PAGES_FROM_SECTION_URL)
         void getPagesFromSections( @Path("sectionId") String sectionId,
@@ -55,6 +50,18 @@ public class ApiClient {
 
     }
 
-    public static ApiService apiService = getTraveLogRestAdapter().create(ApiService.class);
+    public interface General {
+        @GET("/")
+        void getSomething(Callback<Response> callback);
+    }
+
+    public static ApiService apiService = getTraveLogRestAdapter(Constants.MICROSOFT_GRAPH_API_ENDPOINT).create(ApiService.class);
+
+
+
+    public static General getGenericApiService(String url) {
+        return getTraveLogRestAdapter(url).create(General.class);
+
+    }
 
 }

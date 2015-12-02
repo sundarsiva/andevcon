@@ -27,9 +27,7 @@ public class RestAdapterManager {
         return instance;
     }
 
-    protected RestAdapter createRestAdapter() {
-
-        RestAdapter.Builder builder = new RestAdapter.Builder();
+    protected RestAdapter createRestAdapter(String baseUrl) {
 
         //This method catches outgoing REST calls and injects the Authorization and host headers before
         //sending to REST endpoint
@@ -44,7 +42,8 @@ public class RestAdapterManager {
             }
         };
 
-        builder.setEndpoint(Constants.MICROSOFT_GRAPH_API_ENDPOINT);
+        RestAdapter.Builder builder = new RestAdapter.Builder();
+        builder.setEndpoint(baseUrl);
         builder.setRequestInterceptor(requestInterceptor);
         builder.setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE);
         builder.setClient(getClient());

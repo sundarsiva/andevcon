@@ -1,11 +1,15 @@
 package com.andevcon.hackathon.msft.api;
 
+import com.andevcon.hackathon.msft.model.UsersDTO;
+import com.andevcon.hackathon.msft.model.UsersValue;
 import com.andevcon.hackathon.msft.model.sample.SampleRequestBody;
 import com.andevcon.hackathon.msft.model.sample.SampleResponseBody;
 import com.microsoft.onenoteapi.service.OneNotePartsMap;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Page;
 import com.microsoft.onenotevos.Section;
+
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -32,7 +36,8 @@ public class ApiClient {
             GET_USERS_URL = "/me/photo/$value",
             GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content",
             POST_PAGE_INTO_SECTION = "/me/notes/sections/{sectionId}/pages",
-            DELETE_PAGE_URL = "/me/notes/pages/{pageId}";
+            DELETE_PAGE_URL = "/me/notes/pages/{pageId}",
+            GET_USERS = "/users";
 
     static RestAdapter getTraveLogRestAdapter() {
         return RestAdapterManager.getInstance().createRestAdapter();
@@ -83,6 +88,9 @@ public class ApiClient {
                 @Path("pageId") String pageId,
                 Callback<Response> callback
         );
+
+        @GET(GET_USERS)
+        void getUsers(Callback<UsersValue> callback);
     }
 
     public static ApiService apiService = getTraveLogRestAdapter().create(ApiService.class);

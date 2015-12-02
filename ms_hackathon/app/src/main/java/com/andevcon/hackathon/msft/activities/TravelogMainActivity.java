@@ -16,10 +16,10 @@
 
 package com.andevcon.hackathon.msft.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -101,8 +101,9 @@ public class TravelogMainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                launchNewPageActivity();
             }
         });
 
@@ -115,6 +116,11 @@ public class TravelogMainActivity extends AppCompatActivity {
         }
         Picasso.with(getApplicationContext()).load("https://www.baby-connect.com/images/baby2.gif").placeholder(R.drawable.default_img).error(R.drawable.default_img).into(cvUserImg);
 
+    }
+
+    private void launchNewPageActivity() {
+        Intent i = new Intent(this, CreatePostActivity.class);
+        startActivity(i);
     }
 
     @Override

@@ -28,6 +28,8 @@ public class GetStartedActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_get_started);
 
+        getWindow().setStatusBarColor(getResources().getColor(R.color.travelogColorPrimaryDark));
+
         findViewById(R.id.button_get_started).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

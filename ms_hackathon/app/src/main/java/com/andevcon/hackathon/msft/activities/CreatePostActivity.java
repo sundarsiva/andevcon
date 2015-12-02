@@ -2,19 +2,31 @@ package com.andevcon.hackathon.msft.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.api.ApiClient;
+import com.microsoft.onenoteapi.service.OneNotePartsMap;
+import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Page;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.joda.time.DateTime;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,6 +34,7 @@ import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 public class CreatePostActivity extends AppCompatActivity {
@@ -38,7 +51,12 @@ public class CreatePostActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
+    @Bind(R.id.ivImg)
+    ImageView ivImg;
+
     private String mSectionId;
+
+    private boolean toLoadImage = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +76,7 @@ public class CreatePostActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Create new Page");
             getWindow().setStatusBarColor(getResources().getColor(R.color.travelogColorPrimaryDark));
         }
+
     }
 
     @OnClick(R.id.fabSend)
@@ -76,6 +95,14 @@ public class CreatePostActivity extends AppCompatActivity {
             return;
         }
 
+        if (toLoadImage) {
+            postPageWithImage(title, desc);
+        } else {
+            postSimplePage(title, desc);
+        }
+    }
+
+    private void postSimplePage(String title, String desc) {
         ApiClient.apiService.postSimplePage(mSectionId, getHtmlRequestBody(title, desc),
                 new Callback<Page>() {
                     @Override
@@ -89,7 +116,6 @@ public class CreatePostActivity extends AppCompatActivity {
                         Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
                     }
                 });
-
     }
 
     private void launchHome() {
@@ -131,14 +157,95 @@ public class CreatePostActivity extends AppCompatActivity {
                 super.onBackPressed();
                 return true;
             case R.id.action_send:
-                getCameraImage();
+                toggleImage();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void getCameraImage() {
-        Snackbar.make(etDesc.getRootView(), "Get Camera Image", Snackbar.LENGTH_SHORT).show();
+    private void toggleImage() {
+        toLoadImage = !toLoadImage;
+        ivImg.setVisibility(toLoadImage ? View.VISIBLE : View.GONE);
     }
 
+    private void postPageWithImage(String title, String desc) {
+
+        DateTime date = DateTime.now();
+        String imagePartName = date.toString();
+        String simpleHtml = getSimplePageContentBody(
+                getResources().openRawResource(R.raw.create_page_with_image),
+                title, desc, date.toString(), imagePartName);
+
+        TypedString presentationString = new TypedString(simpleHtml) {
+            @Override
+            public String mimeType() {
+                return "text/html";
+            }
+        };
+
+        OneNotePartsMap oneNotePartsMap = new OneNotePartsMap(presentationString);
+
+        TypedFile typedFile = new TypedFile("image/jpg", getImageFile());
+        oneNotePartsMap.put(imagePartName, typedFile);
+
+        ApiClient.apiService.postPageWithImages(mSectionId, oneNotePartsMap, new Callback<Envelope<Page>>() {
+            @Override
+            public void success(Envelope<Page> pageEnvelope, Response response) {
+                Log.d(TAG, "Successful response - " + response.getStatus());
+                launchHome();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
+            }
+        });
+    }
+
+    static String getSimplePageContentBody(InputStream input, String title, String desc, String createDate, String imagePartName) {
+
+        String simpleHtml = "";
+        try {
+            simpleHtml = IOUtils.toString(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(title)) {
+            simpleHtml = simpleHtml.replace("{title}", title);
+        }
+        if (!TextUtils.isEmpty(desc)) {
+            simpleHtml = simpleHtml.replace("{desc}", desc);
+        }
+        if (!TextUtils.isEmpty(createDate)) {
+            simpleHtml = simpleHtml.replace("{contentDate}", createDate);
+        }
+        if (!TextUtils.isEmpty(imagePartName)) {
+            simpleHtml = simpleHtml.replace("{partName}", imagePartName);
+        }
+
+        return simpleHtml;
+    }
+
+
+    /*
+    * @param imagePath The path to the image
+    * @return File. the image to attach to a OneNote page
+    */
+    protected File getImageFile() {
+        InputStream imgStream = getResources().openRawResource(R.raw.get_started);
+        File imageFile = null;
+        try {
+            imageFile = File.createTempFile(
+                    FilenameUtils.getBaseName("test_image"),
+                    FilenameUtils.getExtension("jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            IOUtils.copy(imgStream, FileUtils.openOutputStream(imageFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageFile;
+    }
 }

@@ -51,4 +51,5 @@ dependencies {
     compile 'com.microsoft.aad:adal:1.1.11'
     compile 'joda-time:joda-time:2.3'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'commons-io:commons-io:2.4'
 }

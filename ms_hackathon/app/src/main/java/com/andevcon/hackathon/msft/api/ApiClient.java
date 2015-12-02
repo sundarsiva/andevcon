@@ -1,8 +1,6 @@
 package com.andevcon.hackathon.msft.api;
 
 import com.andevcon.hackathon.msft.helpers.Constants;
-import com.andevcon.hackathon.msft.model.sample.SampleRequestBody;
-import com.andevcon.hackathon.msft.model.sample.SampleResponseBody;
 import com.microsoft.onenoteapi.service.OneNotePartsMap;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Page;
@@ -47,7 +45,7 @@ public class ApiClient {
 
         @Multipart
         @POST(POST_PAGE_INTO_SECTION)
-        void postPageIntoSection(@Path("sectionId") String sectionId,
+        void postPageWithImages(@Path("sectionId") String sectionId,
                                  @PartMap OneNotePartsMap partMap,
                                  Callback<Envelope<Page>> callback);
 
@@ -68,17 +66,9 @@ public class ApiClient {
         @GET(GET_USERS_URL)
         void getUserPhoto(Callback<Response> responseCallback);
 
-        /**
-         * Deletes the specified page
-         *
-         * @param pageId
-         * @param callback
-         */
         @DELETE(DELETE_PAGE_URL)
-        void deletePage(
-                @Path("pageId") String pageId,
-                Callback<Response> callback
-        );
+        void deletePage(@Path("pageId") String pageId,
+                Callback<Response> callback);
 
         @GET(GET_IMAGE_RESOURCE)
         void getPageImageResource(

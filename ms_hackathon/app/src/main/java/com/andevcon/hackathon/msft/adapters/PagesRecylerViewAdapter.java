@@ -98,6 +98,7 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
                     @Override
                     public boolean onMenuItemClick(final MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.item_share) {
+                            Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                         } else if (menuItem.getItemId() == R.id.item_delete) {
                             ApiClient.apiService.deletePage(page.id, new Callback<Response>() {
 
@@ -112,7 +113,6 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
                                     Toast.makeText(viewLocal.getContext(), page.title + " is not deleted", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                         }

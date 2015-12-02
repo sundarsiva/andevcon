@@ -17,10 +17,14 @@
 package com.andevcon.hackathon.msft.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.webkit.WebView;
@@ -35,6 +39,8 @@ import com.squareup.picasso.Picasso;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -47,7 +53,7 @@ public class DetailActivity extends AppCompatActivity {
     public static final String EXTRA_PAGE_ID = "pageId";
     public static final String EXTRA_PAGE_NAME = "pageName";
 
-    WebView mWebView;
+    TextView mContentView;
     String mPageId;
 
     @Override
@@ -67,23 +73,54 @@ public class DetailActivity extends AppCompatActivity {
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(pageName);
 
-        loadBackdrop();
-
-        mWebView = (WebView) findViewById(R.id.detail_tv_notes_content);
-
+        mContentView = (TextView) findViewById(R.id.detail_tv_notes_content);
 
         loadPageContent();
     }
 
-    private void loadBackdrop() {
+    private void loadBackdrop(String imageUrl) {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
-        Picasso.with(this).load(Images.getRandomCheeseDrawable()).into(imageView);
+        if(!TextUtils.isEmpty(imageUrl)) {
+            imageUrl = imageUrl.replace("/$value", "");
+            String resourceId = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
+            //ApiClient.getGenericApiService(imageUrl).getSomething(new Callback<Response>() {
+            ApiClient.apiService.getPageImageResource(resourceId, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    Bitmap bitMap;
+                    BufferedInputStream bis = null;
+                    try {
+                        bis = new BufferedInputStream(response.getBody().in());
+                        bitMap = BitmapFactory.decodeStream(bis);
+                        if(bitMap !=null){
+                            imageView.setImageBitmap(bitMap);
+                        }
+                    } catch (IOException e) {
+                        //Do Nothing
+                    } finally {
+                        try {
+                            bis.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Picasso.with(DetailActivity.this).load(Images.getRandomCheeseDrawable()).into(imageView);
+                }
+            });
+        } else {
+            Picasso.with(this).load(Images.getRandomCheeseDrawable()).into(imageView);
+        }
     }
 
     private void loadPageContent() {
         ApiClient.apiService.getPageContentById(mPageId, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
+                String imageUrl = null;
                 try {
                     InputStream is = response.getBody().in();
                     BufferedInputStream bis = new BufferedInputStream(is);
@@ -94,10 +131,20 @@ public class DetailActivity extends AppCompatActivity {
                     while( (bytesRead = bis.read(contents)) != -1){
                         strFileContents = new String(contents, 0, bytesRead);
                     }
-                    mWebView.loadData(strFileContents, "text/html", "UTF-8");
+
+                    Pattern p = Pattern.compile("src=\"(.*?)\"");
+                    Matcher m = p.matcher(strFileContents);
+
+                    if (m.find()) {
+                        imageUrl = m.group(1); // prints http://www.01net.com/images/article/mea/150.100.790233.jpg
+                    }
+                    String withoutImage = strFileContents.replaceAll("<img .*?/>","");
+                    mContentView.setText(Html.fromHtml(withoutImage));
+                    loadBackdrop(imageUrl);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
 
             @Override

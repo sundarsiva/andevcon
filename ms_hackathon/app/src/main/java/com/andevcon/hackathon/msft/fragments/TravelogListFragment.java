@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.support.android.designlibdemo;
+package com.andevcon.hackathon.msft.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,19 +30,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.andevcon.hackathon.msft.activities.DetailActivity;
 import com.squareup.picasso.Picasso;
+import com.andevcon.hackathon.msft.model.Images;
+import com.support.android.designlibdemo.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CheeseListFragment extends Fragment {
+public class TravelogListFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView rv = (RecyclerView) inflater.inflate(
-                R.layout.fragment_cheese_list, container, false);
+                R.layout.fragment_travelog_list, container, false);
         setupRecyclerView(rv);
         return rv;
     }
@@ -50,7 +53,7 @@ public class CheeseListFragment extends Fragment {
     private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(),
-                getRandomSublist(Cheeses.sCheeseStrings, 30)));
+                getRandomSublist(Images.sCheeseStrings, 30)));
     }
 
     private List<String> getRandomSublist(String[] array, int amount) {
@@ -116,15 +119,15 @@ public class CheeseListFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, CheeseDetailActivity.class);
-                    intent.putExtra(CheeseDetailActivity.EXTRA_NAME, holder.mBoundString);
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra(DetailActivity.EXTRA_NAME, holder.mBoundString);
 
                     context.startActivity(intent);
                 }
             });
 
             Picasso.with(holder.mImageView.getContext())
-                    .load(Cheeses.getRandomCheeseDrawable())
+                    .load(Images.getRandomCheeseDrawable())
                     .into(holder.mImageView);
         }
 

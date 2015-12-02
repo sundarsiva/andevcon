@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.support.android.designlibdemo;
+package com.andevcon.hackathon.msft.model;
+
+import com.support.android.designlibdemo.R;
 
 import java.util.Random;
 
-public class Cheeses {
+public class Images {
 
     private static final Random RANDOM = new Random();
 

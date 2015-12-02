@@ -24,7 +24,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.DesignDemo">
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.andevcon.hackathon.msft.activities.TravelogMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -32,10 +32,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CheeseDetailActivity"
-            android:parentActivityName=".MainActivity">
+        <activity android:name="com.andevcon.hackathon.msft.activities.DetailActivity"
+            android:parentActivityName="com.andevcon.hackathon.msft.activities.TravelogMainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.andevcon.hackathon.msft.activities.TravelogMainActivity" />
         </activity>
 
     </application>

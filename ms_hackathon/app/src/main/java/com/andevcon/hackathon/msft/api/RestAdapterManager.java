@@ -39,6 +39,7 @@ public class RestAdapterManager {
                 final String accessToken = AuthenticationManager.getInstance().getAccessToken();
                 if (!TextUtils.isEmpty(accessToken)) {
                     request.addHeader("Authorization", "Bearer " + accessToken);
+                    request.addHeader("Accept", "application/json");
                 }
             }
         };

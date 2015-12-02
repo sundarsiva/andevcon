@@ -13,15 +13,16 @@ import android.widget.TextView;
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.activities.DetailActivity;
 import com.andevcon.hackathon.msft.model.Images;
+import com.microsoft.onenotevos.Page;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
+public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerViewAdapter.ViewHolder> {
 
     private final TypedValue mTypedValue = new TypedValue();
     private int mBackground;
-    private List<String> mValues;
+    private List<Page> mValues;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public String mBoundString;
@@ -43,11 +44,11 @@ public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<Simple
         }
     }
 
-    public String getValueAt(int position) {
+    public Page getValueAt(int position) {
         return mValues.get(position);
     }
 
-    public SimpleStringRecyclerViewAdapter(Context context, List<String> items) {
+    public PagesRecylerViewAdapter(Context context, List<Page> items) {
         context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
         mBackground = mTypedValue.resourceId;
         mValues = items;
@@ -63,8 +64,8 @@ public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<Simple
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mBoundString = mValues.get(position);
-        holder.mTextView.setText(mValues.get(position));
+        holder.mBoundString = mValues.get(position).title;
+        holder.mTextView.setText(mValues.get(position).title);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

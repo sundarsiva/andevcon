@@ -2,6 +2,8 @@ package com.andevcon.hackathon.msft.api;
 
 import com.andevcon.hackathon.msft.model.sample.SampleRequestBody;
 import com.andevcon.hackathon.msft.model.sample.SampleResponseBody;
+import com.microsoft.onenotevos.Envelope;
+import com.microsoft.onenotevos.Page;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -16,7 +18,7 @@ public class ApiClient {
 
     private static final String
             GET_SAMPLE_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint",
-            GET_SECTIONS_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint";
+            GET_PAGES_FROM_SECTION_URL = "/me/notes/sections/{sectionId}/pages";
 
     static RestAdapter getTraveLogRestAdapter() {
         return RestAdapterManager.getInstance().createRestAdapter();
@@ -29,6 +31,10 @@ public class ApiClient {
                           @Body SampleRequestBody request,
                           Callback<SampleResponseBody> callback);
 
+        @GET(GET_PAGES_FROM_SECTION_URL)
+        void getPagesFromSections( @Path("sectionId") String sectionId,
+                              Callback<Envelope<Page>> callback
+        );
 
     }
 

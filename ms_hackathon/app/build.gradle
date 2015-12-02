@@ -47,4 +47,6 @@ dependencies {
     compile 'com.squareup.okio:okio:1.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:butterknife:7.0.0'
+    // Azure Active Directory Library
+    compile 'com.microsoft.aad:adal:1.1.11'
 }

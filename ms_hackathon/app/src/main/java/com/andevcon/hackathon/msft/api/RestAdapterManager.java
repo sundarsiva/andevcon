@@ -1,5 +1,7 @@
 package com.andevcon.hackathon.msft.api;
 
+import android.text.TextUtils;
+
 import com.andevcon.hackathon.msft.BuildConfig;
 import com.andevcon.hackathon.msft.helpers.Constants;
 import com.microsoft.office365.connectmicrosoftgraph.AuthenticationManager;
@@ -16,14 +18,12 @@ public class RestAdapterManager {
     protected static volatile RestAdapterManager instance;
 
     private RestAdapterManager() {
-
     }
 
     public static synchronized RestAdapterManager getInstance() {
 
-        if(instance == null)
+        if(null == instance)
             instance = new RestAdapterManager();
-
         return instance;
     }
 
@@ -36,9 +36,9 @@ public class RestAdapterManager {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                final String token = AuthenticationManager.getInstance().getAccessToken();
-                if (null != token) {
-                    request.addHeader("Authorization", "Bearer " + token);
+                final String accessToken = AuthenticationManager.getInstance().getAccessToken();
+                if (!TextUtils.isEmpty(accessToken)) {
+                    request.addHeader("Authorization", "Bearer " + accessToken);
                 }
             }
         };

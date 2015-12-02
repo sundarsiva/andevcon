@@ -127,9 +127,9 @@ public class DetailActivity extends AppCompatActivity {
                     byte[] contents = new byte[1024];
 
                     int bytesRead = 0;
-                    String strFileContents = null;
+                    String strFileContents = "";
                     while( (bytesRead = bis.read(contents)) != -1){
-                        strFileContents = new String(contents, 0, bytesRead);
+                        strFileContents = strFileContents + new String(contents, 0, bytesRead);
                     }
 
                     Pattern p = Pattern.compile("src=\"(.*?)\"");

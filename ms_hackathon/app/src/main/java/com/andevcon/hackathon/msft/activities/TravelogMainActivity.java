@@ -16,6 +16,8 @@
 
 package com.andevcon.hackathon.msft.activities;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -44,6 +46,8 @@ import com.squareup.picasso.Picasso;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Section;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,7 +118,27 @@ public class TravelogMainActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(userName)){
             tvUserName.setText(userName);
         }
-        Picasso.with(getApplicationContext()).load("https://www.baby-connect.com/images/baby2.gif").placeholder(R.drawable.default_img).error(R.drawable.default_img).into(cvUserImg);
+        ApiClient.apiService.getUserPhoto(new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Bitmap bitMap = null;
+                try {
+                    bitMap = BitmapFactory.decodeStream(new BufferedInputStream(response.getBody().in()));
+                    if(bitMap !=null){
+                        cvUserImg.setImageBitmap(bitMap);
+                    }
+                } catch (IOException e) {
+                    //Do Nothing
+                } finally {
+                    //Close Input Stream
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 
     }
 

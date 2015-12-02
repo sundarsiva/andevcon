@@ -8,8 +8,10 @@ import com.microsoft.onenotevos.Section;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Header;
 import retrofit.http.Path;
 
 /**
@@ -20,7 +22,8 @@ public class ApiClient {
     private static final String
             GET_SAMPLE_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint",
             GET_PAGES_FROM_SECTION_URL = "/me/notes/sections/{sectionId}/pages",
-            GET_SECTIONS_URL = "/me/notes/sections";
+            GET_SECTIONS_URL = "/me/notes/sections",
+            GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content";
 
     static RestAdapter getTraveLogRestAdapter() {
         return RestAdapterManager.getInstance().createRestAdapter();
@@ -40,6 +43,10 @@ public class ApiClient {
         @GET(GET_SECTIONS_URL)
         void getSections(Callback<Envelope<Section>> callback);
 
+        @GET(GET_PAGE_CONTENT_BY_ID)
+        void getPageContentById(
+                @Path("id") String id,
+                Callback<Response> callback);
 
     }
 

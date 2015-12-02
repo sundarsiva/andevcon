@@ -64,16 +64,17 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mBoundString = mValues.get(position).title;
-        holder.mTextView.setText(mValues.get(position).title);
+        final Page page = mValues.get(position);
+        holder.mBoundString = page.title;
+        holder.mTextView.setText(page.title);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra(DetailActivity.EXTRA_NAME, holder.mBoundString);
-
+                intent.putExtra(DetailActivity.EXTRA_PAGE_ID, page.id);
+                intent.putExtra(DetailActivity.EXTRA_PAGE_NAME, page.name);
                 context.startActivity(intent);
             }
         });

@@ -120,7 +120,7 @@ public class TravelogListFragment extends Fragment {
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra(DetailActivity.EXTRA_NAME, holder.mBoundString);
+                    intent.putExtra(DetailActivity.EXTRA_PAGE_NAME, holder.mBoundString);
 
                     context.startActivity(intent);
                 }

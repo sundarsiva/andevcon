@@ -15,11 +15,16 @@ import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.activities.DetailActivity;
+import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.model.Images;
 import com.microsoft.onenotevos.Page;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerViewAdapter.ViewHolder> {
 
@@ -91,10 +96,22 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
                 popupMenu.getMenuInflater().inflate(R.menu.page_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        if(menuItem.getItemId() == R.id.item_share){
-                            Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();
-                        } else if (menuItem.getItemId() == R.id.item_delete){
+                    public boolean onMenuItemClick(final MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.item_share) {
+                        } else if (menuItem.getItemId() == R.id.item_delete) {
+                            ApiClient.apiService.deletePage(page.id, new Callback<Response>() {
+
+                                @Override
+                                public void success(Response response, Response response2) {
+                                    Toast.makeText(viewLocal.getContext(), page.title + " is deleted", Toast.LENGTH_SHORT).show();
+                                    notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    Toast.makeText(viewLocal.getContext(), page.title + " is not deleted", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();

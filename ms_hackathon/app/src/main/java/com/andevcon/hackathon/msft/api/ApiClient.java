@@ -25,7 +25,8 @@ public class ApiClient {
             GET_PAGES_FROM_SECTION_URL = "/me/notes/sections/{sectionId}/pages",
             GET_SECTIONS_URL = "/me/notes/sections",
             GET_USERS_URL = "/me/photo/$value",
-            GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content";
+            GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content",
+            DELETE_PAGE_URL = "/me/notes/pages/{pageId}";
 
     static RestAdapter getTraveLogRestAdapter() {
         return RestAdapterManager.getInstance().createRestAdapter();
@@ -35,12 +36,12 @@ public class ApiClient {
 
         @GET(GET_SAMPLE_ENDPOINT_URL)
         void getSampleMethod(@Path("sampleParam") String sampleParam,
-                          @Body SampleRequestBody request,
-                          Callback<SampleResponseBody> callback);
+                             @Body SampleRequestBody request,
+                             Callback<SampleResponseBody> callback);
 
         @GET(GET_PAGES_FROM_SECTION_URL)
-        void getPagesFromSections( @Path("sectionId") String sectionId,
-                              Callback<Envelope<Page>> callback);
+        void getPagesFromSections(@Path("sectionId") String sectionId,
+                                  Callback<Envelope<Page>> callback);
 
         @GET(GET_SECTIONS_URL)
         void getSections(Callback<Envelope<Section>> callback);
@@ -59,13 +60,11 @@ public class ApiClient {
          * @param pageId
          * @param callback
          */
-        @DELETE("/me/notes/pages/{pageId}")
+        @DELETE(DELETE_PAGE_URL)
         void deletePage(
                 @Path("pageId") String pageId,
-                Callback<Envelope<Page>> callback
+                Callback<Response> callback
         );
-
-
     }
 
     public static ApiService apiService = getTraveLogRestAdapter().create(ApiService.class);

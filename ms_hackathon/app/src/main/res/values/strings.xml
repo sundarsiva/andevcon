@@ -9,5 +9,8 @@
     the big cheese.</string>
   <string name="checkin">Checkin</string>
   <string name="menu_settings">Settings</string>
+  <string name="get_started">Get Started</string>
+    <string name="title_activity_get_started">GetStartedActivity</string>
+    <string name="get_started_content">Please authenticate with your Microsoft Office 365 Account to get started</string>
 
 </resources>

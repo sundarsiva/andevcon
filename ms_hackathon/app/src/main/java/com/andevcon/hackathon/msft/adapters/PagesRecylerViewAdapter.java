@@ -74,7 +74,7 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra(DetailActivity.EXTRA_PAGE_ID, page.id);
-                intent.putExtra(DetailActivity.EXTRA_PAGE_NAME, page.name);
+                intent.putExtra(DetailActivity.EXTRA_PAGE_NAME, page.title);
                 context.startActivity(intent);
             }
         });

@@ -58,9 +58,20 @@
                 android:background="@null"
                 android:layout_marginTop="15dp"
                 android:padding="15dp"
-                android:minLines="15"
+                android:minLines="5"
                 android:gravity="top"
                 android:minHeight="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/ivImg"
+                android:src="@drawable/get_started"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/etDesc"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:adjustViewBounds="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

@@ -51,7 +51,7 @@ public class ApiClient {
 
         @Multipart
         @POST(POST_PAGE_INTO_SECTION)
-        void postPageIntoSection(@Path("sectionId") String sectionId,
+        void postPageWithImages(@Path("sectionId") String sectionId,
                                  @PartMap OneNotePartsMap partMap,
                                  Callback<Envelope<Page>> callback);
 

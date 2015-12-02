@@ -23,6 +23,7 @@ public class ApiClient {
             GET_SAMPLE_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint",
             GET_PAGES_FROM_SECTION_URL = "/me/notes/sections/{sectionId}/pages",
             GET_SECTIONS_URL = "/me/notes/sections",
+            GET_USERS_URL = "/me/photo/$value",
             GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content";
 
     static RestAdapter getTraveLogRestAdapter() {
@@ -47,6 +48,10 @@ public class ApiClient {
         void getPageContentById(
                 @Path("id") String id,
                 Callback<Response> callback);
+
+        @GET(GET_USERS_URL)
+        void getUserPhoto(Callback<Response> responseCallback);
+
 
     }
 

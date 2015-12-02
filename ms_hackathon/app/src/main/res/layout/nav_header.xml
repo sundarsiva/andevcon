@@ -32,7 +32,8 @@
         android:layout_height="@dimen/cv_layout_height"
         android:src="@drawable/default_img"
         app:civ_border_width="2dp"
-        app:civ_border_color="#FF000000"/>
+        app:civ_border_color="#FF000000"
+        android:layout_marginTop="@dimen/cv_margin_top"/>
 
     <TextView
         android:id="@+id/tv_user_name"

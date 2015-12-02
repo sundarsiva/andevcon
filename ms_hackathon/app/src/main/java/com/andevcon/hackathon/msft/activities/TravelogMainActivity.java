@@ -30,15 +30,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.fragments.TravelogListFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TravelogMainActivity extends AppCompatActivity {
 
@@ -46,11 +51,22 @@ public class TravelogMainActivity extends AppCompatActivity {
     // arguments for this activity
     public static final String ARG_GIVEN_NAME = "givenName";
     public static final String ARG_DISPLAY_ID = "displayableId";
+    public static String userName;
+    public static String userDisplayName;
+
+    private TextView tvUserName;
+    private CircleImageView cvUserImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            userName = bundle.getString(ARG_GIVEN_NAME);
+            userDisplayName = bundle.getString(ARG_DISPLAY_ID);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,10 +78,10 @@ public class TravelogMainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
-
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
@@ -82,6 +98,12 @@ public class TravelogMainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        cvUserImg = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.cv_user_img);
+        tvUserName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_user_name);
+        if(!TextUtils.isEmpty(userName)){
+            tvUserName.setText(userName);
+        }
+        Picasso.with(getApplicationContext()).load("https://www.baby-connect.com/images/baby2.gif").placeholder(R.drawable.default_img).error(R.drawable.default_img).into(cvUserImg);
     }
 
     @Override
@@ -111,13 +133,13 @@ public class TravelogMainActivity extends AppCompatActivity {
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                return true;
-            }
-        });
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
     }
 
     static class Adapter extends FragmentPagerAdapter {

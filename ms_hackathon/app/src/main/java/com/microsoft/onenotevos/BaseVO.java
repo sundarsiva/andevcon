@@ -6,17 +6,11 @@ package com.microsoft.onenotevos;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.joda.time.DateTime;
-
 public abstract class BaseVO {
 
     public Boolean isDefault;
 
     public Boolean isShared;
-
-    public DateTime createdTime;
-
-    public DateTime lastModifiedTime;
 
     public Links links;
 

@@ -30,15 +30,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.andevcon.hackathon.msft.R;
+import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.TravelogListFragment;
+import com.microsoft.onenotevos.Envelope;
+import com.microsoft.onenotevos.Section;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class TravelogMainActivity extends AppCompatActivity {
 
@@ -46,6 +54,10 @@ public class TravelogMainActivity extends AppCompatActivity {
     // arguments for this activity
     public static final String ARG_GIVEN_NAME = "givenName";
     public static final String ARG_DISPLAY_ID = "displayableId";
+    public static final String TAG = TravelogMainActivity.class.getCanonicalName();
+
+    ViewPager mViewPager;
+    TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +78,7 @@ public class TravelogMainActivity extends AppCompatActivity {
             setupDrawerContent(navigationView);
         }
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-        }
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +89,8 @@ public class TravelogMainActivity extends AppCompatActivity {
             }
         });
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        fetchSections();
     }
 
     @Override
@@ -100,12 +109,29 @@ public class TravelogMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new TravelogListFragment(), "Category 1");
-        adapter.addFragment(new TravelogListFragment(), "Category 2");
-        adapter.addFragment(new TravelogListFragment(), "Category 3");
-        viewPager.setAdapter(adapter);
+    public void fetchSections() {
+        final Adapter adapter = new Adapter(getSupportFragmentManager());
+        ApiClient.apiService.getSections(new Callback<Envelope<Section>>() {
+            @Override
+            public void success(Envelope<Section> sectionEnvelope, Response response) {
+                Section[] sections = sectionEnvelope.value;
+                for(int i = 0; i < sections.length; i++) {
+                    adapter.addFragment(new TravelogListFragment(), sections[i].name);
+                }
+                setupViewPager(adapter);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, error.toString());
+            }
+        });
+    }
+
+    private void setupViewPager(Adapter adapter) {
+        mViewPager.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        mTabLayout.setupWithViewPager(mViewPager);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {

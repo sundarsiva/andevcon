@@ -21,16 +21,34 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.andevcon.hackathon.msft.R;
+import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.model.Images;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String EXTRA_NAME = "cheese_name";
+    public static final String TAG = DetailActivity.class.getCanonicalName();
+
+    public static final String EXTRA_PAGE_ID = "pageId";
+    public static final String EXTRA_PAGE_NAME = "pageName";
+
+    WebView mWebView;
+    String mPageId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +56,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         Intent intent = getIntent();
-        final String cheeseName = intent.getStringExtra(EXTRA_NAME);
+        mPageId = intent.getStringExtra(EXTRA_PAGE_ID);
+        String pageName = intent.getStringExtra(EXTRA_PAGE_NAME);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -46,14 +65,46 @@ public class DetailActivity extends AppCompatActivity {
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(cheeseName);
+        collapsingToolbar.setTitle(pageName);
 
         loadBackdrop();
+
+        mWebView = (WebView) findViewById(R.id.detail_tv_notes_content);
+
+
+        loadPageContent();
     }
 
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
         Picasso.with(this).load(Images.getRandomCheeseDrawable()).into(imageView);
+    }
+
+    private void loadPageContent() {
+        ApiClient.apiService.getPageContentById(mPageId, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                try {
+                    InputStream is = response.getBody().in();
+                    BufferedInputStream bis = new BufferedInputStream(is);
+                    byte[] contents = new byte[1024];
+
+                    int bytesRead = 0;
+                    String strFileContents = null;
+                    while( (bytesRead = bis.read(contents)) != -1){
+                        strFileContents = new String(contents, 0, bytesRead);
+                    }
+                    mWebView.loadData(strFileContents, "text/html", "UTF-8");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "failure: ", error);
+            }
+        });
     }
 
     @Override

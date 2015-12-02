@@ -12,6 +12,7 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
+import retrofit.http.Header;
 import retrofit.http.Path;
 
 /**
@@ -23,8 +24,8 @@ public class ApiClient {
             GET_SAMPLE_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint",
             GET_PAGES_FROM_SECTION_URL = "/me/notes/sections/{sectionId}/pages",
             GET_SECTIONS_URL = "/me/notes/sections",
-            GET_USERS_URL = "/me/photo/$value";
-
+            GET_USERS_URL = "/me/photo/$value",
+            GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content";
 
     static RestAdapter getTraveLogRestAdapter() {
         return RestAdapterManager.getInstance().createRestAdapter();
@@ -43,6 +44,11 @@ public class ApiClient {
 
         @GET(GET_SECTIONS_URL)
         void getSections(Callback<Envelope<Section>> callback);
+
+        @GET(GET_PAGE_CONTENT_BY_ID)
+        void getPageContentById(
+                @Path("id") String id,
+                Callback<Response> callback);
 
         @GET(GET_USERS_URL)
         void getUserPhoto(Callback<Response> responseCallback);

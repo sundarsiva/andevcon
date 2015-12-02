@@ -43,6 +43,9 @@ import java.util.List;
 public class TravelogMainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
+    // arguments for this activity
+    public static final String ARG_GIVEN_NAME = "givenName";
+    public static final String ARG_DISPLAY_ID = "displayableId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

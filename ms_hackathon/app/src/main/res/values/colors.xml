@@ -4,4 +4,6 @@
     <color name="travelogColorPrimary">#FF157BB0</color>
     <color name="travelogColorPrimaryDark">#FF126390</color>
     <color name="travelogColorAccent">#FF709AB4</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

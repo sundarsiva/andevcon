@@ -105,6 +105,7 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
                                 @Override
                                 public void success(Response response, Response response2) {
                                     Toast.makeText(viewLocal.getContext(), page.title + " is deleted", Toast.LENGTH_SHORT).show();
+
                                     notifyDataSetChanged();
                                 }
 

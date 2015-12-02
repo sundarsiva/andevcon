@@ -15,7 +15,8 @@ import retrofit.http.Path;
 public class ApiClient {
 
     private static final String
-            GET_SAMPLE_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint";
+            GET_SAMPLE_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint",
+            GET_SECTIONS_ENDPOINT_URL = "/{sampleParam}/ssampleEndpoint";
 
     static RestAdapter getTraveLogRestAdapter() {
         return RestAdapterManager.getInstance().createRestAdapter();

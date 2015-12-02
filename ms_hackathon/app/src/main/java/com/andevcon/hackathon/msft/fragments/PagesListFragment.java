@@ -43,7 +43,6 @@ public class PagesListFragment extends Fragment {
     private LayoutInflater inflater;
 
     public static PagesListFragment newInstance(String secionId) {
-        secionId = "1-b87ae439-4fb2-4d98-b7ce-f72226e90777";
         PagesListFragment fragment = new PagesListFragment();
         Bundle args = new Bundle();
         args.putString(Constants.KEY_SECTION_ID, secionId);
@@ -57,6 +56,7 @@ public class PagesListFragment extends Fragment {
 
         if (getArguments() != null) {
             mSectionId = getArguments().getString(Constants.KEY_SECTION_ID, "");
+            Log.d(TAG, "onCreate() called with: " + "mSectionId = [" + mSectionId + "]");
         }
     }
 

@@ -30,8 +30,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,16 +39,15 @@ import android.widget.TextView;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.api.ApiClient;
-import com.andevcon.hackathon.msft.fragments.TravelogListFragment;
-import com.squareup.picasso.Picasso;
+import com.andevcon.hackathon.msft.fragments.PagesListFragment;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Section;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -140,8 +139,8 @@ public class TravelogMainActivity extends AppCompatActivity {
             @Override
             public void success(Envelope<Section> sectionEnvelope, Response response) {
                 Section[] sections = sectionEnvelope.value;
-                for(int i = 0; i < sections.length; i++) {
-                    adapter.addFragment(new TravelogListFragment(), sections[i].name);
+                for(Section section: sections) {
+                    adapter.addFragment(PagesListFragment.newInstance(section.id), section.name);
                 }
                 setupViewPager(adapter);
             }

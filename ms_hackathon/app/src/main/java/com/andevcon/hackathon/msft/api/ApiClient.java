@@ -10,6 +10,7 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
@@ -45,6 +46,18 @@ public class ApiClient {
 
         @GET(GET_USERS_URL)
         void getUserPhoto(Callback<Response> responseCallback);
+
+        /**
+         * Deletes the specified page
+         *
+         * @param pageId
+         * @param callback
+         */
+        @DELETE("/me/notes/pages/{pageId}")
+        void deletePage(
+                @Path("pageId") String pageId,
+                Callback<Envelope<Page>> callback
+        );
 
 
     }

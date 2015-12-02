@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.activities.DetailActivity;
@@ -75,6 +78,31 @@ public class PagesRecylerViewAdapter extends RecyclerView.Adapter<PagesRecylerVi
                 intent.putExtra(DetailActivity.EXTRA_NAME, holder.mBoundString);
 
                 context.startActivity(intent);
+            }
+        });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View view) {
+                final View viewLocal = view;
+                PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+                popupMenu.getMenuInflater().inflate(R.menu.page_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if(menuItem.getItemId() == R.id.item_share){
+                            Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        } else if (menuItem.getItemId() == R.id.item_delete){
+                            Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(viewLocal.getContext(), menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
+                return true;
             }
         });
 

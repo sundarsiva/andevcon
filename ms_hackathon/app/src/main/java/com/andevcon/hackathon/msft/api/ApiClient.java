@@ -32,7 +32,8 @@ public class ApiClient {
             GET_USERS_URL = "/me/photo/$value",
             GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content",
             POST_PAGE_INTO_SECTION = "/me/notes/sections/{sectionId}/pages",
-            DELETE_PAGE_URL = "/me/notes/pages/{pageId}";
+            DELETE_PAGE_URL = "/me/notes/pages/{pageId}",
+            GET_IMAGE_RESOURCE = "/me/notes/resources/{id}/content";
 
     static RestAdapter getTraveLogRestAdapter(String baseUrl) {
         return RestAdapterManager.getInstance().createRestAdapter(baseUrl);
@@ -78,6 +79,12 @@ public class ApiClient {
                 @Path("pageId") String pageId,
                 Callback<Response> callback
         );
+
+        @GET(GET_IMAGE_RESOURCE)
+        void getPageImageResource(
+                @Path("id") String id,
+                Callback<Response> callback);
+
     }
 
     public interface General {

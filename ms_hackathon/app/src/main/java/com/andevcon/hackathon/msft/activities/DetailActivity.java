@@ -81,9 +81,10 @@ public class DetailActivity extends AppCompatActivity {
     private void loadBackdrop(String imageUrl) {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
         if(!TextUtils.isEmpty(imageUrl)) {
-            imageUrl = imageUrl.replace("('", "/");
-            imageUrl = imageUrl.replace("')", "");
-            ApiClient.getGenericApiService(imageUrl).getSomething(new Callback<Response>() {
+            imageUrl = imageUrl.replace("/$value", "");
+            String resourceId = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
+            //ApiClient.getGenericApiService(imageUrl).getSomething(new Callback<Response>() {
+            ApiClient.apiService.getPageImageResource(resourceId, new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     Bitmap bitMap;

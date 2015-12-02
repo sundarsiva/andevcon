@@ -56,5 +56,6 @@
   <string name="hint_title">Page Title</string>
   <string name="hint_description">Description</string>
   <string name="menu_send">Send</string>
+  <string name="menu_camera">Take an Image</string>
 
 </resources>

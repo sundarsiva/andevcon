@@ -18,10 +18,8 @@ import com.andevcon.hackathon.msft.helpers.Constants;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Page;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -103,14 +101,4 @@ public class PagesListFragment extends Fragment {
             rvPagesList.setAdapter(new PagesRecylerViewAdapter(getActivity(), pagesList));
         }
     }
-
-    private List<String> getRandomSublist(String[] array, int amount) {
-        ArrayList<String> list = new ArrayList<>(amount);
-        Random random = new Random();
-        while (list.size() < amount) {
-            list.add(array[random.nextInt(array.length)]);
-        }
-        return list;
-    }
-
 }

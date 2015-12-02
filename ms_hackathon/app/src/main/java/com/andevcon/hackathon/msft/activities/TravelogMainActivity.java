@@ -44,7 +44,6 @@ import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.PagesListFragment;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Section;
-import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -70,8 +69,10 @@ public class TravelogMainActivity extends AppCompatActivity {
 
     public static final String TAG = TravelogMainActivity.class.getCanonicalName();
 
-    ViewPager mViewPager;
-    TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
+    private Adapter mAdapter;
+    private Section[] mSections;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,9 @@ public class TravelogMainActivity extends AppCompatActivity {
     }
 
     private void launchNewPageActivity() {
+        String sectionId = mSections[mViewPager.getCurrentItem()].id;
         Intent i = new Intent(this, CreatePostActivity.class);
+        i.putExtra(CreatePostActivity.EXTRA_SECTION_ID, sectionId);
         startActivity(i);
     }
 
@@ -164,15 +167,15 @@ public class TravelogMainActivity extends AppCompatActivity {
     }
 
     public void fetchSections() {
-        final Adapter adapter = new Adapter(getSupportFragmentManager());
+        mAdapter = new Adapter(getSupportFragmentManager());
         ApiClient.apiService.getSections(new Callback<Envelope<Section>>() {
             @Override
             public void success(Envelope<Section> sectionEnvelope, Response response) {
-                Section[] sections = sectionEnvelope.value;
-                for(Section section: sections) {
-                    adapter.addFragment(PagesListFragment.newInstance(section.id), section.name);
+                mSections = sectionEnvelope.value;
+                for(Section section: mSections) {
+                    mAdapter.addFragment(PagesListFragment.newInstance(section.id), section.name);
                 }
-                setupViewPager(adapter);
+                setupViewPager(mAdapter);
             }
 
             @Override
@@ -183,6 +186,7 @@ public class TravelogMainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(Adapter adapter) {
+        mViewPager.setOffscreenPageLimit(mSections.length);
         mViewPager.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mTabLayout.setupWithViewPager(mViewPager);

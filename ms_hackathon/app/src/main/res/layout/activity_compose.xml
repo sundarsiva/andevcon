@@ -14,14 +14,14 @@
         android:layout_height="wrap_content" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabSkittleMenu"
+        android:id="@+id/fabSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@android:drawable/ic_menu_camera"
+        android:src="@drawable/ic_done"
         app:backgroundTint="@color/travelogColorPrimary"
         app:rippleColor="@color/travelogColorPrimaryDark"
         app:borderWidth="0dp"
@@ -29,6 +29,7 @@
         app:pressedTranslationZ="12dp"/>
 
     <ScrollView
+        android:id="@+id/svContainer"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

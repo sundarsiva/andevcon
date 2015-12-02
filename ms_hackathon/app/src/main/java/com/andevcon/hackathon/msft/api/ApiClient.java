@@ -13,11 +13,12 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PartMap;
-import retrofit.http.Header;
 import retrofit.http.Path;
+import retrofit.mime.TypedString;
 
 /**
  * Created by prtrived on 12/1/15.
@@ -51,8 +52,14 @@ public class ApiClient {
         @Multipart
         @POST(POST_PAGE_INTO_SECTION)
         void postPageIntoSection(@Path("sectionId") String sectionId,
-                                @PartMap OneNotePartsMap partMap,
-                                Callback<Envelope<Page>> callback);
+                                 @PartMap OneNotePartsMap partMap,
+                                 Callback<Envelope<Page>> callback);
+
+        @Headers("Content-Type:text/html")
+        @POST(POST_PAGE_INTO_SECTION)
+        void postSimplePage(@Path("sectionId") String sectionId,
+                            @Body TypedString content,
+                            Callback<Page> callback);
 
         @GET(GET_SECTIONS_URL)
         void getSections(Callback<Envelope<Section>> callback);

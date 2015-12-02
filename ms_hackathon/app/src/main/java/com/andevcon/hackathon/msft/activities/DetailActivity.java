@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.support.android.designlibdemo;
+package com.andevcon.hackathon.msft.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,8 +25,10 @@ import android.view.Menu;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.andevcon.hackathon.msft.model.Images;
+import com.support.android.designlibdemo.R;
 
-public class CheeseDetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "cheese_name";
 
@@ -51,7 +53,7 @@ public class CheeseDetailActivity extends AppCompatActivity {
 
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
-        Picasso.with(this).load(Cheeses.getRandomCheeseDrawable()).centerCrop().into(imageView);
+        Picasso.with(this).load(Images.getRandomCheeseDrawable()).into(imageView);
     }
 
     @Override

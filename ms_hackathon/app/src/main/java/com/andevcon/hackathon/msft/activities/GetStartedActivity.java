@@ -31,7 +31,8 @@ public class GetStartedActivity extends AppCompatActivity {
         findViewById(R.id.button_get_started).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(GetStartedActivity.this, TravelogMainActivity.class));
+//                startActivity(new Intent(GetStartedActivity.this, TravelogMainActivity.class));
+                connectToOffice365();
             }
         });
     }

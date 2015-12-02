@@ -14,4 +14,7 @@ public class Constants {
     public static final String REDIRECT_URI = "http://localhost";
     public static final String MICROSOFT_GRAPH_API_ENDPOINT = "https://graph.microsoft.com/beta/";
     public static final String MICROSOFT_GRAPH_API_ENDPOINT_RESOURCE_ID = "https://graph.microsoft.com/";
+
+
+    public static final String KEY_SECTION_ID = "KEY_SECTION_ID";
 }

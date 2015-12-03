@@ -38,6 +38,8 @@ public class ApiClient {
             GET_IMAGE_RESOURCE = "/me/notes/resources/{id}/content",
             GET_USERS = "/users";
 
+    public static ApiService apiService = getTraveLogRestAdapter(Constants.MICROSOFT_GRAPH_API_ENDPOINT).create(ApiService.class);
+
     static RestAdapter getTraveLogRestAdapter(String baseUrl) {
         return RestAdapterManager.getInstance().createRestAdapter(baseUrl);
     }
@@ -94,20 +96,6 @@ public class ApiClient {
                 @Header("Content-type") String contentTypeHeader,
                 @Body MessageWrapper mail,
                 Callback<Void> callback);
-    }
-
-    public interface General {
-        @GET("/")
-        void getSomething(Callback<Response> callback);
-    }
-
-    public static ApiService apiService = getTraveLogRestAdapter(Constants.MICROSOFT_GRAPH_API_ENDPOINT).create(ApiService.class);
-
-
-
-    public static General getGenericApiService(String url) {
-        return getTraveLogRestAdapter(url).create(General.class);
-
     }
 
 }

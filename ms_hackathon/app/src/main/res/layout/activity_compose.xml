@@ -28,6 +28,16 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLargeInverse"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:paddingTop="@dimen/hundred_fifteen_dp"
+        android:paddingBottom="@dimen/hundred_fifteen_dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ScrollView
         android:id="@+id/svContainer"
         android:layout_below="@id/toolbar"

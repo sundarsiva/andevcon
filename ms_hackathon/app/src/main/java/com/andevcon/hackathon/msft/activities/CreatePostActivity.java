@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
@@ -55,6 +57,12 @@ public class CreatePostActivity extends AppCompatActivity {
     @Bind(R.id.ivImg)
     ImageView ivImg;
 
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
+
+    @Bind(R.id.svContainer)
+    ScrollView svContainer;
+
     private String mSectionId;
     private String mSectionName;
 
@@ -79,6 +87,8 @@ public class CreatePostActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Create new Page");
             getWindow().setStatusBarColor(getResources().getColor(R.color.travelogColorPrimaryDark));
         }
+
+        togglePbVisibility(false);
 
     }
 
@@ -111,33 +121,39 @@ public class CreatePostActivity extends AppCompatActivity {
     }
 
     private void createSectionAndPage(String title, String desc) {
+        togglePbVisibility(true);
         ApiClient.apiService.createNewSection(mSectionName,
                 getHtmlRequestBody(title, desc),
                 new Callback<Envelope<Page>>() {
                     @Override
                     public void success(Envelope<Page> pageEnvelope, Response response) {
+                        togglePbVisibility(false);
                         Log.d(TAG, "Successful response - " + response.getStatus());
                         launchHome();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
+                        togglePbVisibility(false);
                         Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
                     }
                 });
     }
 
     private void postSimplePage(String title, String desc) {
+        togglePbVisibility(true);
         ApiClient.apiService.postSimplePage(mSectionId, getHtmlRequestBody(title, desc),
                 new Callback<Page>() {
                     @Override
                     public void success(Page page, Response response) {
+                        togglePbVisibility(false);
                         Log.d(TAG, "Successful response - " + page.title);
                         launchHome();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
+                        togglePbVisibility(false);
                         Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
                     }
                 });
@@ -193,6 +209,11 @@ public class CreatePostActivity extends AppCompatActivity {
         ivImg.setVisibility(toLoadImage ? View.VISIBLE : View.GONE);
     }
 
+    private void togglePbVisibility(boolean show) {
+        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        svContainer.setVisibility(!show ? View.VISIBLE : View.GONE);
+    }
+
     private void postPageWithImage(String title, String desc) {
 
         DateTime date = DateTime.now();
@@ -213,15 +234,18 @@ public class CreatePostActivity extends AppCompatActivity {
         TypedFile typedFile = new TypedFile("image/jpg", getImageFile());
         oneNotePartsMap.put(imagePartName, typedFile);
 
+        togglePbVisibility(true);
         ApiClient.apiService.postPageWithImages(mSectionId, oneNotePartsMap, new Callback<Envelope<Page>>() {
             @Override
             public void success(Envelope<Page> pageEnvelope, Response response) {
+                togglePbVisibility(false);
                 Log.d(TAG, "Successful response - " + response.getStatus());
                 launchHome();
             }
 
             @Override
             public void failure(RetrofitError error) {
+                togglePbVisibility(false);
                 Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
             }
         });

@@ -46,6 +46,11 @@ The following **[Microsoft Graph APIs were Used] (https://github.com/sundarsiva/
 * Mail the page via the [send mail API] (http://graph.microsoft.io/docs/api-reference/beta/api/user_post_messages)
 * Delete a [Page] (http://graph.microsoft.io/docs/api-reference/beta/api/page_delete)
 
+## GIF Walkthrough 
+
+Here's a walkthrough of implemented user stories:
+
+![output/travelogdemo.gif](https://raw.githubusercontent.com/sundarsiva/andevcon/master/ms_hackathon/output/travelogdemo.gif)
 
 ## General Feedback
 

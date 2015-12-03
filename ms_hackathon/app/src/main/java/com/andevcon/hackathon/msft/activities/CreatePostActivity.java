@@ -39,8 +39,9 @@ import retrofit.mime.TypedString;
 
 public class CreatePostActivity extends AppCompatActivity {
 
-    public static final String EXTRA_SECTION_ID = "EXTRA_SECTION_ID";
     private static final String TAG = CreatePostActivity.class.getSimpleName();
+    public static final String EXTRA_SECTION_ID = "EXTRA_SECTION_ID";
+    public static final String EXTRA_SECTION_NAME = "EXTRA_SECTION_NAME";
 
     @Bind(R.id.etDesc)
     EditText etDesc;
@@ -55,6 +56,7 @@ public class CreatePostActivity extends AppCompatActivity {
     ImageView ivImg;
 
     private String mSectionId;
+    private String mSectionName;
 
     private boolean toLoadImage = false;
 
@@ -67,6 +69,7 @@ public class CreatePostActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mSectionId = intent.getStringExtra(EXTRA_SECTION_ID);
+            mSectionName = intent.getStringExtra(EXTRA_SECTION_NAME);
             Log.d(TAG, "onCreate() called with: " + "mSectionId = [" + mSectionId + "]");
         }
 
@@ -82,8 +85,8 @@ public class CreatePostActivity extends AppCompatActivity {
     @OnClick(R.id.fabSend)
     public void postPage() {
 
-        if (TextUtils.isEmpty(mSectionId)) {
-            Toast.makeText(this, "section is null", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(mSectionId) && TextUtils.isEmpty(mSectionName)) {
+            Toast.makeText(this, "Section Identifier required", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -95,11 +98,33 @@ public class CreatePostActivity extends AppCompatActivity {
             return;
         }
 
+        if (!TextUtils.isEmpty(mSectionName)) {
+            createSectionAndPage(title, desc);
+            return;
+        }
+
         if (toLoadImage) {
             postPageWithImage(title, desc);
         } else {
             postSimplePage(title, desc);
         }
+    }
+
+    private void createSectionAndPage(String title, String desc) {
+        ApiClient.apiService.createNewSection(mSectionName,
+                getHtmlRequestBody(title, desc),
+                new Callback<Envelope<Page>>() {
+                    @Override
+                    public void success(Envelope<Page> pageEnvelope, Response response) {
+                        Log.d(TAG, "Successful response - " + response.getStatus());
+                        launchHome();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
+                    }
+                });
     }
 
     private void postSimplePage(String title, String desc) {

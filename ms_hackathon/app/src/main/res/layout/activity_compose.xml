@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/friends_toolbar"
         app:theme="@style/ToolbarTheme"
         android:title="Create new Page"
         android:minHeight="?attr/actionBarSize"
@@ -30,7 +30,7 @@
 
     <ScrollView
         android:id="@+id/svContainer"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/friends_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

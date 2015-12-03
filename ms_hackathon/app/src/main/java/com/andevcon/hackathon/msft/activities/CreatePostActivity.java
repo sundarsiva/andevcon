@@ -48,7 +48,7 @@ public class CreatePostActivity extends AppCompatActivity {
     @Bind(R.id.etTitle)
     EditText etTitle;
 
-    @Bind(R.id.toolbar)
+    @Bind(R.id.friends_toolbar)
     Toolbar toolbar;
 
     @Bind(R.id.ivImg)

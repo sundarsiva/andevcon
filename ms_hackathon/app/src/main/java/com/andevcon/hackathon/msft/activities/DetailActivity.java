@@ -77,7 +77,7 @@ public class DetailActivity extends AppCompatActivity {
         mPageId = intent.getStringExtra(EXTRA_PAGE_ID);
         mPageName = intent.getStringExtra(EXTRA_PAGE_NAME);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.friends_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

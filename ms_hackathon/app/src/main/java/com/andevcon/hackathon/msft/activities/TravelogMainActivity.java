@@ -37,16 +37,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
-import com.andevcon.hackathon.msft.adapters.FriendsListAdapter;
 import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.PagesListFragment;
 import com.andevcon.hackathon.msft.helpers.DataStore;
-import com.andevcon.hackathon.msft.model.UsersDTO;
 import com.andevcon.hackathon.msft.model.UsersValue;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Section;
@@ -92,7 +89,7 @@ public class TravelogMainActivity extends AppCompatActivity {
             userDisplayName = bundle.getString(ARG_DISPLAY_ID);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.friends_toolbar);
         setSupportActionBar(toolbar);
 
         final ActionBar ab = getSupportActionBar();

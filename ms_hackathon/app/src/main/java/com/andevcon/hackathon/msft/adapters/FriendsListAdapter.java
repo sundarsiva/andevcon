@@ -36,7 +36,7 @@ public class FriendsListAdapter extends ArrayAdapter<UsersDTO> {
         TextView tvEmail = (TextView) convertView.findViewById(R.id.tv_friend_email);
         tvName.setText(users.get(position).getDisplayName());
         tvPhone.setText(users.get(position).getMobilePhone());
-        tvEmail.setText(users.get(position).getMail());
+        tvEmail.setText(users.get(position).getUserPrincipalName());
         return convertView;
     }
 

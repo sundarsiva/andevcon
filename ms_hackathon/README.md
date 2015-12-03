@@ -1,5 +1,7 @@
 # Microsoft Hackathon Project - *TraveLog*
 
+[![launcher](https://raw.githubusercontent.com/sundarsiva/andevcon/master/ms_hackathon/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)](https://github.com/sundarsiva/andevcon/blob/master/ms_hackathon/output/Demo.apk?raw=true)
+
 **TraveLog** is an android app that allows users to log their journey when they're out and about (to new places, events, etc.). The app utilizes [Microsoft Open365 Graph APIs](http://graph.microsoft.io/docs/overview/overview).
 
 ## Contributors
@@ -46,13 +48,23 @@ The following **[Microsoft Graph APIs were Used] (https://github.com/sundarsiva/
 * Mail the page via the [send mail API] (http://graph.microsoft.io/docs/api-reference/beta/api/user_post_messages)
 * Delete a [Page] (http://graph.microsoft.io/docs/api-reference/beta/api/page_delete)
 
+## App APK
+
+Here's a demo apk file:
+
+[![launcher](https://raw.githubusercontent.com/sundarsiva/andevcon/master/ms_hackathon/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)](https://github.com/sundarsiva/andevcon/blob/master/ms_hackathon/output/Demo.apk?raw=true)
+
+## Video Walkthrough 
+
+Here's a video walkthrough of the implemented user stories:
+
+[![launcher](https://raw.githubusercontent.com/sundarsiva/andevcon/master/ms_hackathon/output/youtube.png)](https://www.youtube.com/watch?v=uRNpuboekm4)
+
 ## GIF Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
 ![output/travelogdemo.gif](https://raw.githubusercontent.com/sundarsiva/andevcon/master/ms_hackathon/output/travelogdemo.gif)
-
-[Demo APK file] (https://github.com/sundarsiva/andevcon/blob/master/ms_hackathon/output/Demo.apk?raw=true)
 
 ## General Feedback
 
@@ -62,6 +74,7 @@ Here's a walkthrough of implemented user stories:
 * The documentation for some of the APIs were incorrect/incomplete.
 * Provide an explicit resolved URLs for the image content instead of providing byte streams
 * The [/me/notes/pages] endpoint creates a new notebook and not a section inside the existing primary notebook
+* The APIs take a really long time to respond sometimes.
 
 ## Open-source libraries used
 

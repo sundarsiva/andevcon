@@ -43,6 +43,7 @@ import android.widget.Toast;
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.PagesListFragment;
+import com.andevcon.hackathon.msft.helpers.DataStore;
 import com.andevcon.hackathon.msft.model.UsersDTO;
 import com.andevcon.hackathon.msft.model.UsersValue;
 import com.microsoft.onenotevos.Envelope;
@@ -152,6 +153,7 @@ public class TravelogMainActivity extends AppCompatActivity {
                 ApiClient.apiService.getUsers(new Callback<UsersValue>() {
                     @Override
                     public void success(UsersValue usersDTOs, Response response) {
+                        DataStore.setUsersValue(usersDTOs);
                         Toast.makeText(getApplicationContext(), String.valueOf(usersDTOs.getValue().size()), Toast.LENGTH_SHORT).show();
                     }
 

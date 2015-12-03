@@ -39,13 +39,16 @@ import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.api.ApiClient;
+import com.andevcon.hackathon.msft.helpers.DataStore;
 import com.andevcon.hackathon.msft.model.Images;
+import com.andevcon.hackathon.msft.model.UsersDTO;
 import com.microsoft.office365.connectmicrosoftgraph.MSGraphAPIController;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,8 +65,8 @@ public class DetailActivity extends AppCompatActivity {
 
     TextView mContentView;
     String mPageId;
-    private String mPageName;
-    static String mEmailContents = "";
+    static String mPageName;
+    String mEmailContents = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,14 +102,21 @@ public class DetailActivity extends AppCompatActivity {
         new ContactsDialogFragment().show(getSupportFragmentManager(), "ContactsDialogFragment");
     }
 
-    public static class ContactsDialogFragment extends DialogFragment {
+    public class ContactsDialogFragment extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            final List<UsersDTO> contacts = DataStore.getUsersValue().getValue();
+            final String[] contactNames = new String[contacts.size()];
+            int i = 0;
+            for(UsersDTO contact : contacts) {
+                contactNames[i] = contact.getDisplayName();
+                i++;
+            }
             builder.setTitle(R.string.pick_a_contact)
-                    .setItems(new String[]{"A", "B", "C"}, new DialogInterface.OnClickListener() {
+                    .setItems(contactNames, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            onSendMail(mEmailContents, "A", "sundar5583@gmail.com");
+                            onSendMail(contacts.get(which).getMail(), mPageName);
                             dismiss();
                         }
                     });
@@ -238,13 +248,13 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    private static void onSendMail(String emailBody, String toEmail, String subject) {
+    private void onSendMail(String toEmail, String subject) {
 
         new MSGraphAPIController()
                 .sendMail(
                         toEmail,
                         subject,
-                        emailBody,
+                        mEmailContents,
                         new Callback<Void>() {
                             @Override
                             public void success(Void aVoid, Response response) {

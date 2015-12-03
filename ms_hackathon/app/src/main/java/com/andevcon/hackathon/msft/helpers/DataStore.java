@@ -7,13 +7,13 @@ import com.andevcon.hackathon.msft.model.UsersValue;
  */
 public class DataStore {
 
-    private static UsersValue usersValue;
+    private static UsersValue sUsersValue;
 
     public static  UsersValue getUsersValue() {
-        return usersValue;
+        return sUsersValue;
     }
 
     public static void setUsersValue(UsersValue usersValue) {
-        usersValue = usersValue;
+        sUsersValue = usersValue;
     }
 }

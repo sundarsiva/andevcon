@@ -145,7 +145,6 @@ public class TravelogMainActivity extends AppCompatActivity {
                         DataStore.setUsersValue(usersDTOs);
                         Intent intent = new Intent(getApplicationContext(), FriendsListActivity.class);
                         startActivity(intent);
-                        Toast.makeText(getApplicationContext(), String.valueOf(usersDTOs.getValue().size()), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

@@ -54,6 +54,10 @@ Here's a demo apk file:
 
 [![launcher](https://raw.githubusercontent.com/sundarsiva/andevcon/master/ms_hackathon/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)](https://github.com/sundarsiva/andevcon/blob/master/ms_hackathon/output/Demo.apk?raw=true)
 
+### Demo credentials:
+* Username: krunalshah@travelog.onmicrosoft.com
+* Password: Krunal123$
+
 ## Video Walkthrough 
 
 Here's a video walkthrough of the implemented user stories:

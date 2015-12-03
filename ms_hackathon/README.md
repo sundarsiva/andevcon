@@ -52,6 +52,8 @@ Here's a walkthrough of implemented user stories:
 
 ![output/travelogdemo.gif](https://raw.githubusercontent.com/sundarsiva/andevcon/master/ms_hackathon/output/travelogdemo.gif)
 
+[Demo APK file] (https://github.com/sundarsiva/andevcon/blob/master/ms_hackathon/output/Demo.apk?raw=true)
+
 ## General Feedback
 
 * The team present was really helpful at debugging/answering queries.

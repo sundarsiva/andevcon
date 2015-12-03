@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,6 +41,9 @@ public class PagesListFragment extends Fragment {
     @Bind(R.id.pbPagesList)
     ProgressBar pbPagesList;
 
+    @Bind(R.id.srlPagesList)
+    SwipeRefreshLayout srlPagesList;
+
     private String mSectionId;
 
     private static final String TAG = PagesListFragment.class.getSimpleName();
@@ -67,8 +71,23 @@ public class PagesListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_travelog_pages_list, null);
         ButterKnife.bind(this, view);
+        initUI();
         fetchPages();
         return view;
+    }
+
+    private void initUI() {
+        srlPagesList.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        srlPagesList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchPages();
+            }
+        });
     }
 
     private void fetchPages() {
@@ -77,6 +96,7 @@ public class PagesListFragment extends Fragment {
             @Override
             public void success(Envelope<Page> pageEnvelope, Response response) {
                 togglePbVisibility(false);
+                srlPagesList.setRefreshing(false);
                 if (pageEnvelope != null) {
                     List<Page> pagesList = Arrays.asList(pageEnvelope.value);
                     if (pagesList != null && pagesList.size() > 0) {
@@ -88,6 +108,7 @@ public class PagesListFragment extends Fragment {
             @Override
             public void failure(RetrofitError error) {
                 togglePbVisibility(false);
+                srlPagesList.setRefreshing(false);
                 Log.e(TAG, "Failed to fetchPages - " + Log.getStackTraceString(error));
             }
         });

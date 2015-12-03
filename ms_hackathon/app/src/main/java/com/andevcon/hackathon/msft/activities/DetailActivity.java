@@ -43,6 +43,7 @@ import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.helpers.DataStore;
 import com.andevcon.hackathon.msft.model.Images;
 import com.andevcon.hackathon.msft.model.UsersDTO;
+import com.andevcon.hackathon.msft.model.UsersValue;
 import com.microsoft.office365.connectmicrosoftgraph.MSGraphAPIController;
 import com.squareup.picasso.Picasso;
 
@@ -107,7 +108,24 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void showContactsChooser() {
-        new ContactsDialogFragment().show(getSupportFragmentManager(), "ContactsDialogFragment");
+
+        if(DataStore.getUsersValue() == null) {
+            ApiClient.apiService.getUsers(new Callback<UsersValue>() {
+                @Override
+                public void success(UsersValue usersDTOs, Response response) {
+                    DataStore.setUsersValue(usersDTOs);
+                    new ContactsDialogFragment().show(getSupportFragmentManager(), "ContactsDialogFragment");
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Toast.makeText(getApplicationContext(), "Failed to fetch Friends", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            new ContactsDialogFragment().show(getSupportFragmentManager(), "ContactsDialogFragment");
+        }
+
     }
 
     public class ContactsDialogFragment extends DialogFragment {

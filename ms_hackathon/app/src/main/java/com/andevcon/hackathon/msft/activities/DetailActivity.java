@@ -32,8 +32,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.api.ApiClient;
@@ -56,10 +58,11 @@ public class DetailActivity extends AppCompatActivity {
     public static final String TAG = DetailActivity.class.getCanonicalName();
 
     public static final String EXTRA_PAGE_ID = "pageId";
-    public static final String EXTRA_PAGE_NAME = "pageName";
+    public static final String EXTRA_PAGE_NAME = "mPageName";
 
     TextView mContentView;
     String mPageId;
+    private String mPageName;
     static String mEmailContents = "";
 
     @Override
@@ -69,7 +72,7 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mPageId = intent.getStringExtra(EXTRA_PAGE_ID);
-        String pageName = intent.getStringExtra(EXTRA_PAGE_NAME);
+        mPageName = intent.getStringExtra(EXTRA_PAGE_NAME);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -77,7 +80,7 @@ public class DetailActivity extends AppCompatActivity {
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(pageName);
+        collapsingToolbar.setTitle(mPageName);
 
         View emailButton = findViewById(R.id.email_contact);
         emailButton.setOnClickListener(new View.OnClickListener() {
@@ -188,8 +191,51 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sample_actions, menu);
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            case R.id.action_edit:
+                showToast("Edit the post");
+                return true;
+            case R.id.action_delete:
+                deletePost();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deletePost() {
+        ApiClient.apiService.deletePage(mPageId, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d(TAG, "Successful delete - " + response2.getStatus());
+                launchHome();
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, Log.getStackTraceString(error));
+                showToast("Error occured while trying to delete this post");
+            }
+        });
+    }
+
+    private void launchHome() {
+        Intent intent = new Intent(this, TravelogMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     private static void onSendMail(String emailBody, String toEmail, String subject) {

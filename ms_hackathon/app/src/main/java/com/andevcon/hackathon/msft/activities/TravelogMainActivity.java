@@ -38,10 +38,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.PagesListFragment;
+import com.andevcon.hackathon.msft.helpers.DataStore;
+import com.andevcon.hackathon.msft.model.UsersDTO;
+import com.andevcon.hackathon.msft.model.UsersValue;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Section;
 
@@ -141,6 +145,26 @@ public class TravelogMainActivity extends AppCompatActivity {
             }
         });
 
+        Menu navMenu = navigationView.getMenu();
+        MenuItem friends = navMenu.findItem(R.id.nav_friends);
+        friends.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                ApiClient.apiService.getUsers(new Callback<UsersValue>() {
+                    @Override
+                    public void success(UsersValue usersDTOs, Response response) {
+                        DataStore.setUsersValue(usersDTOs);
+                        Toast.makeText(getApplicationContext(), String.valueOf(usersDTOs.getValue().size()), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Toast.makeText(getApplicationContext(), "Failed to fetch Friends", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return true;
+            }
+        });
     }
 
     private void launchNewPageActivity() {

@@ -1,6 +1,7 @@
 package com.andevcon.hackathon.msft.api;
 
 import com.andevcon.hackathon.msft.helpers.Constants;
+import com.andevcon.hackathon.msft.model.UsersValue;
 import com.microsoft.office365.connectmicrosoftgraph.vo.MessageWrapper;
 import com.microsoft.onenoteapi.service.OneNotePartsMap;
 import com.microsoft.onenotevos.Envelope;
@@ -33,7 +34,8 @@ public class ApiClient {
             GET_PAGE_CONTENT_BY_ID = "/me/notes/pages/{id}/content",
             POST_PAGE_INTO_SECTION = "/me/notes/sections/{sectionId}/pages",
             DELETE_PAGE_URL = "/me/notes/pages/{pageId}",
-            GET_IMAGE_RESOURCE = "/me/notes/resources/{id}/content";
+            GET_IMAGE_RESOURCE = "/me/notes/resources/{id}/content",
+            GET_USERS = "/users";
 
     static RestAdapter getTraveLogRestAdapter(String baseUrl) {
         return RestAdapterManager.getInstance().createRestAdapter(baseUrl);
@@ -76,6 +78,8 @@ public class ApiClient {
         void getPageImageResource(
                 @Path("id") String id,
                 Callback<Response> callback);
+        @GET(GET_USERS)
+        void getUsers(Callback<UsersValue> callback);
 
         @POST("/me/microsoft.graph.sendmail")
         void sendMail(

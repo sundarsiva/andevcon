@@ -31,5 +31,7 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.TravelogMainActivity" />
         </activity>
+
+        <activity android:name=".activities.FriendsListActivity"/>
     </application>
 </manifest>

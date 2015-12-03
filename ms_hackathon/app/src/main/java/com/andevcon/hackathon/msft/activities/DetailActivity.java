@@ -16,24 +16,29 @@
 
 package com.andevcon.hackathon.msft.activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
-import android.webkit.WebView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.model.Images;
+import com.microsoft.office365.connectmicrosoftgraph.MSGraphAPIController;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
@@ -55,6 +60,7 @@ public class DetailActivity extends AppCompatActivity {
 
     TextView mContentView;
     String mPageId;
+    static String mEmailContents = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,9 +79,36 @@ public class DetailActivity extends AppCompatActivity {
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(pageName);
 
+        View emailButton = findViewById(R.id.email_contact);
+        emailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showContactsChooser();
+            }
+        });
+
         mContentView = (TextView) findViewById(R.id.detail_tv_notes_content);
 
         loadPageContent();
+    }
+
+    private void showContactsChooser() {
+        new ContactsDialogFragment().show(getSupportFragmentManager(), "ContactsDialogFragment");
+    }
+
+    public static class ContactsDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.pick_a_contact)
+                    .setItems(new String[]{"A", "B", "C"}, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            onSendMail(mEmailContents, "A", "sundar5583@gmail.com");
+                            dismiss();
+                        }
+                    });
+            return builder.create();
+        }
     }
 
     private void loadBackdrop(String imageUrl) {
@@ -127,18 +160,17 @@ public class DetailActivity extends AppCompatActivity {
                     byte[] contents = new byte[1024];
 
                     int bytesRead = 0;
-                    String strFileContents = "";
                     while( (bytesRead = bis.read(contents)) != -1){
-                        strFileContents = strFileContents + new String(contents, 0, bytesRead);
+                        mEmailContents = mEmailContents + new String(contents, 0, bytesRead);
                     }
 
                     Pattern p = Pattern.compile("src=\"(.*?)\"");
-                    Matcher m = p.matcher(strFileContents);
+                    Matcher m = p.matcher(mEmailContents);
 
                     if (m.find()) {
                         imageUrl = m.group(1); // prints http://www.01net.com/images/article/mea/150.100.790233.jpg
                     }
-                    String withoutImage = strFileContents.replaceAll("<img .*?/>","");
+                    String withoutImage = mEmailContents.replaceAll("<img .*?/>","");
                     mContentView.setText(Html.fromHtml(withoutImage));
                     loadBackdrop(imageUrl);
                 } catch (IOException e) {
@@ -158,5 +190,23 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.sample_actions, menu);
         return true;
+    }
+
+    private static void onSendMail(String emailBody, String toEmail, String subject) {
+
+        new MSGraphAPIController()
+                .sendMail(
+                        toEmail,
+                        subject,
+                        emailBody,
+                        new Callback<Void>() {
+                            @Override
+                            public void success(Void aVoid, Response response) {
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                            }
+                        });
     }
 }

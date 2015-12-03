@@ -57,5 +57,6 @@
   <string name="hint_description">Description</string>
   <string name="menu_send">Send</string>
   <string name="menu_camera">Take an Image</string>
+  <string name="pick_a_contact">Choose a contact</string>
 
 </resources>

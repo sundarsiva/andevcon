@@ -35,14 +35,14 @@
             android:title="Discussion" />
     </group>
 
-    <item android:title="Sub items">
+    <item android:title="Notebook Sections">
         <menu>
             <item
                 android:icon="@drawable/ic_dashboard"
-                android:title="Sub item 1" />
+                android:title="Events" />
             <item
                 android:icon="@drawable/ic_forum"
-                android:title="Sub item 2" />
+                android:title="Travel" />
         </menu>
     </item>
 

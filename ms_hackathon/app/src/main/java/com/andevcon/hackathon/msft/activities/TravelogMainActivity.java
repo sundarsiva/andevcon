@@ -25,12 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
-import com.andevcon.hackathon.msft.adapters.FriendsListAdapter;
 import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.PagesListFragment;
 import com.andevcon.hackathon.msft.helpers.DataStore;

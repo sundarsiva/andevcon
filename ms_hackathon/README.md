@@ -46,15 +46,28 @@ The following **[Microsoft Graph APIs were Used] (https://github.com/sundarsiva/
 * Mail the page via the [send mail API] (http://graph.microsoft.io/docs/api-reference/beta/api/user_post_messages)
 * Delete a [Page] (http://graph.microsoft.io/docs/api-reference/beta/api/page_delete)
 
+## GIF Walkthrough 
 
-## Challenges Working With APIs
+Here's a walkthrough of implemented user stories:
 
-Describe any challenges encountered while building the app.
+![output/travelogdemo.gif](https://raw.githubusercontent.com/sundarsiva/andevcon/master/ms_hackathon/output/travelogdemo.gif)
+
+[Demo APK file] (https://github.com/sundarsiva/andevcon/blob/master/ms_hackathon/output/Demo.apk?raw=true)
+
+## General Feedback
+
+* The team present was really helpful at debugging/answering queries.
+* The [GitHub sample repository] (https://github.com/OfficeDev/O365-Android-Microsoft-Graph-Snippets) is helpful but not fully comprehensive.
+* Registration process was too dispersed 
+* The documentation for some of the APIs were incorrect/incomplete.
+* Provide an explicit resolved URLs for the image content instead of providing byte streams
+* The [/me/notes/pages] endpoint creates a new notebook and not a section inside the existing primary notebook
 
 ## Open-source libraries used
 
-- [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
+- [Retrofit](https://github.com/square/retrofit) - For network calls
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
+- [GSON](https://github.com/google/gson) - For deserializing the JSON to POJOs etc.
 
 ## License
 

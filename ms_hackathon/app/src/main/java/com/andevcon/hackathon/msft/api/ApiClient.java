@@ -53,8 +53,8 @@ public class ApiClient {
         @Multipart
         @POST(POST_PAGE_INTO_SECTION)
         void postPageWithImages(@Path("sectionId") String sectionId,
-                                 @PartMap OneNotePartsMap partMap,
-                                 Callback<Envelope<Page>> callback);
+                                @PartMap OneNotePartsMap partMap,
+                                Callback<Envelope<Page>> callback);
 
         @Headers("Content-Type:text/html")
         @POST(POST_PAGE_INTO_SECTION)
@@ -82,12 +82,12 @@ public class ApiClient {
 
         @DELETE(DELETE_PAGE_URL)
         void deletePage(@Path("pageId") String pageId,
-                Callback<Response> callback);
+                        Callback<Response> callback);
 
         @GET(GET_IMAGE_RESOURCE)
-        void getPageImageResource(
-                @Path("id") String id,
-                Callback<Response> callback);
+        void getPageImageResource(@Path("id") String id,
+                                  Callback<Response> callback);
+
         @GET(GET_USERS)
         void getUsers(Callback<UsersValue> callback);
 

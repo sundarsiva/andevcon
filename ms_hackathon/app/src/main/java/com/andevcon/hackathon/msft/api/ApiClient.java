@@ -20,6 +20,7 @@ import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PartMap;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.mime.TypedString;
 
 /**
@@ -60,6 +61,13 @@ public class ApiClient {
         void postSimplePage(@Path("sectionId") String sectionId,
                             @Body TypedString content,
                             Callback<Page> callback);
+
+
+        @Headers("Content-Type:text/html")
+        @POST("/me/notes/pages")
+        void createNewSection(@Query("sectionName") String name,
+                              @Body TypedString content,
+                              Callback<Envelope<Page>> callback);
 
         @GET(GET_SECTIONS_URL)
         void getSections(Callback<Envelope<Section>> callback);

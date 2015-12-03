@@ -1,21 +1,6 @@
-/*
- * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.andevcon.hackathon.msft.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,13 +15,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +32,6 @@ import com.andevcon.hackathon.msft.R;
 import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.PagesListFragment;
 import com.andevcon.hackathon.msft.helpers.DataStore;
-import com.andevcon.hackathon.msft.model.UsersDTO;
 import com.andevcon.hackathon.msft.model.UsersValue;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Section;
@@ -83,6 +70,7 @@ public class TravelogMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             userName = bundle.getString(ARG_GIVEN_NAME);
@@ -105,6 +93,7 @@ public class TravelogMainActivity extends AppCompatActivity {
         }
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +143,8 @@ public class TravelogMainActivity extends AppCompatActivity {
                     @Override
                     public void success(UsersValue usersDTOs, Response response) {
                         DataStore.setUsersValue(usersDTOs);
+                        Intent intent = new Intent(getApplicationContext(), FriendsListActivity.class);
+                        startActivity(intent);
                         Toast.makeText(getApplicationContext(), String.valueOf(usersDTOs.getValue().size()), Toast.LENGTH_SHORT).show();
                     }
 
@@ -174,6 +165,12 @@ public class TravelogMainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    private void launchNewSectionActivity(String sectionName) {
+        Intent i = new Intent(this, CreatePostActivity.class);
+        i.putExtra(CreatePostActivity.EXTRA_SECTION_NAME, sectionName);
+        startActivity(i);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.sample_actions, menu);
@@ -185,6 +182,9 @@ public class TravelogMainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_create:
+                showSectionTitlePrompt();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -255,5 +255,42 @@ public class TravelogMainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
         }
+    }
+
+    private void showSectionTitlePrompt() {
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.layout_prompt, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView.findViewById(R.id.etInput);
+
+        // set dialog message
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Create",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                String input = userInput.getText().toString();
+
+                                if (!TextUtils.isEmpty(input)) {
+                                    launchNewSectionActivity(input);
+                                } else {
+                                    userInput.setError("Title must be present");
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 }

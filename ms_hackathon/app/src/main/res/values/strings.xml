@@ -60,5 +60,6 @@
   <string name="menu_edit">Edit Post</string>
   <string name="menu_delete">Delete Post</string>
   <string name="pick_a_contact">Choose a contact</string>
+  <string name="menu_create">Create Section</string>
 
 </resources>

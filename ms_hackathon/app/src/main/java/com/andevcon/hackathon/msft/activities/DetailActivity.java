@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,12 +43,16 @@ import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.helpers.DataStore;
 import com.andevcon.hackathon.msft.model.Images;
 import com.andevcon.hackathon.msft.model.UsersDTO;
+import com.andevcon.hackathon.msft.model.UsersValue;
 import com.microsoft.office365.connectmicrosoftgraph.MSGraphAPIController;
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.io.Charsets;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,10 +68,10 @@ public class DetailActivity extends AppCompatActivity {
     public static final String EXTRA_PAGE_ID = "pageId";
     public static final String EXTRA_PAGE_NAME = "mPageName";
 
-    TextView mContentView;
-    String mPageId;
-    static String mPageName;
-    String mEmailContents = "";
+    private TextView mContentView;
+    private String mPageId, mPageName;
+    private String mEmailContents = "";
+    private ProgressBar mPbPageDetail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,11 +100,32 @@ public class DetailActivity extends AppCompatActivity {
 
         mContentView = (TextView) findViewById(R.id.detail_tv_notes_content);
 
+        mPbPageDetail = (ProgressBar) findViewById(R.id.pb_page_detail);
+        mPbPageDetail.setVisibility(View.VISIBLE);
+
+
         loadPageContent();
     }
 
     private void showContactsChooser() {
-        new ContactsDialogFragment().show(getSupportFragmentManager(), "ContactsDialogFragment");
+
+        if(DataStore.getUsersValue() == null) {
+            ApiClient.apiService.getUsers(new Callback<UsersValue>() {
+                @Override
+                public void success(UsersValue usersDTOs, Response response) {
+                    DataStore.setUsersValue(usersDTOs);
+                    new ContactsDialogFragment().show(getSupportFragmentManager(), "ContactsDialogFragment");
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Toast.makeText(getApplicationContext(), "Failed to fetch Friends", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            new ContactsDialogFragment().show(getSupportFragmentManager(), "ContactsDialogFragment");
+        }
+
     }
 
     public class ContactsDialogFragment extends DialogFragment {
@@ -116,7 +142,8 @@ public class DetailActivity extends AppCompatActivity {
             builder.setTitle(R.string.pick_a_contact)
                     .setItems(contactNames, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            onSendMail(contacts.get(which).getMail(), mPageName);
+                            mPbPageDetail.setVisibility(View.VISIBLE);
+                            onSendMail(contacts.get(which).getUserPrincipalName());
                             dismiss();
                         }
                     });
@@ -129,7 +156,6 @@ public class DetailActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(imageUrl)) {
             imageUrl = imageUrl.replace("/$value", "");
             String resourceId = imageUrl.substring(imageUrl.lastIndexOf("/")+1, imageUrl.length());
-            //ApiClient.getGenericApiService(imageUrl).getSomething(new Callback<Response>() {
             ApiClient.apiService.getPageImageResource(resourceId, new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
@@ -150,16 +176,22 @@ public class DetailActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
+                    mPbPageDetail.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     Picasso.with(DetailActivity.this).load(Images.getRandomCheeseDrawable()).into(imageView);
+                    mPbPageDetail.setVisibility(View.GONE);
                 }
             });
+
         } else {
             Picasso.with(this).load(Images.getRandomCheeseDrawable()).into(imageView);
+            mPbPageDetail.setVisibility(View.GONE);
         }
+
+
     }
 
     private void loadPageContent() {
@@ -171,7 +203,6 @@ public class DetailActivity extends AppCompatActivity {
                     InputStream is = response.getBody().in();
                     BufferedInputStream bis = new BufferedInputStream(is);
                     byte[] contents = new byte[1024];
-
                     int bytesRead = 0;
                     while( (bytesRead = bis.read(contents)) != -1){
                         mEmailContents = mEmailContents + new String(contents, 0, bytesRead);
@@ -181,7 +212,7 @@ public class DetailActivity extends AppCompatActivity {
                     Matcher m = p.matcher(mEmailContents);
 
                     if (m.find()) {
-                        imageUrl = m.group(1); // prints http://www.01net.com/images/article/mea/150.100.790233.jpg
+                        imageUrl = m.group(1);
                     }
                     String withoutImage = mEmailContents.replaceAll("<img .*?/>","");
                     mContentView.setText(Html.fromHtml(withoutImage));
@@ -248,21 +279,23 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    private void onSendMail(String toEmail, String subject) {
-
+    private void onSendMail(String toEmail) {
         new MSGraphAPIController()
                 .sendMail(
                         toEmail,
-                        subject,
+                        mPageName,
                         mEmailContents,
                         new Callback<Void>() {
                             @Override
                             public void success(Void aVoid, Response response) {
+                                Toast.makeText(DetailActivity.this, "Email is on your way", Toast.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
+                                Toast.makeText(DetailActivity.this, "Sending email failed. Try again", Toast.LENGTH_LONG).show();
                             }
                         });
+        mPbPageDetail.setVisibility(View.GONE);
     }
 }

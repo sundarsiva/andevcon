@@ -6,8 +6,6 @@ package com.andevcon.hackathon.msft.helpers;
 public class Constants {
 
     public static final int TIME_REQUEST_TIMEOUT = 30;
-    public static final String BASE_URL = "https://login.microsoftonline.com/common";
-
     public static final String AUTHORITY_URL = "https://login.microsoftonline.com/common";
     // Update these two constants with the values for your application:
     public static final String CLIENT_ID = "e2238cc0-ec85-4f3a-a7ca-12172115110d";

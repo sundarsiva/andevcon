@@ -20,6 +20,7 @@ import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PartMap;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.mime.TypedString;
 
 /**
@@ -36,6 +37,8 @@ public class ApiClient {
             DELETE_PAGE_URL = "/me/notes/pages/{pageId}",
             GET_IMAGE_RESOURCE = "/me/notes/resources/{id}/content",
             GET_USERS = "/users";
+
+    public static ApiService apiService = getTraveLogRestAdapter(Constants.MICROSOFT_GRAPH_API_ENDPOINT).create(ApiService.class);
 
     static RestAdapter getTraveLogRestAdapter(String baseUrl) {
         return RestAdapterManager.getInstance().createRestAdapter(baseUrl);
@@ -58,6 +61,13 @@ public class ApiClient {
         void postSimplePage(@Path("sectionId") String sectionId,
                             @Body TypedString content,
                             Callback<Page> callback);
+
+
+        @Headers("Content-Type:text/html")
+        @POST("/me/notes/pages")
+        void createNewSection(@Query("sectionName") String name,
+                              @Body TypedString content,
+                              Callback<Envelope<Page>> callback);
 
         @GET(GET_SECTIONS_URL)
         void getSections(Callback<Envelope<Section>> callback);
@@ -86,20 +96,6 @@ public class ApiClient {
                 @Header("Content-type") String contentTypeHeader,
                 @Body MessageWrapper mail,
                 Callback<Void> callback);
-    }
-
-    public interface General {
-        @GET("/")
-        void getSomething(Callback<Response> callback);
-    }
-
-    public static ApiService apiService = getTraveLogRestAdapter(Constants.MICROSOFT_GRAPH_API_ENDPOINT).create(ApiService.class);
-
-
-
-    public static General getGenericApiService(String url) {
-        return getTraveLogRestAdapter(url).create(General.class);
-
     }
 
 }

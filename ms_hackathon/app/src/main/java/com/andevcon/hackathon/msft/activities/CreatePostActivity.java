@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
@@ -39,8 +41,9 @@ import retrofit.mime.TypedString;
 
 public class CreatePostActivity extends AppCompatActivity {
 
-    public static final String EXTRA_SECTION_ID = "EXTRA_SECTION_ID";
     private static final String TAG = CreatePostActivity.class.getSimpleName();
+    public static final String EXTRA_SECTION_ID = "EXTRA_SECTION_ID";
+    public static final String EXTRA_SECTION_NAME = "EXTRA_SECTION_NAME";
 
     @Bind(R.id.etDesc)
     EditText etDesc;
@@ -54,7 +57,14 @@ public class CreatePostActivity extends AppCompatActivity {
     @Bind(R.id.ivImg)
     ImageView ivImg;
 
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
+
+    @Bind(R.id.svContainer)
+    ScrollView svContainer;
+
     private String mSectionId;
+    private String mSectionName;
 
     private boolean toLoadImage = false;
 
@@ -67,6 +77,7 @@ public class CreatePostActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mSectionId = intent.getStringExtra(EXTRA_SECTION_ID);
+            mSectionName = intent.getStringExtra(EXTRA_SECTION_NAME);
             Log.d(TAG, "onCreate() called with: " + "mSectionId = [" + mSectionId + "]");
         }
 
@@ -77,13 +88,15 @@ public class CreatePostActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.travelogColorPrimaryDark));
         }
 
+        togglePbVisibility(false);
+
     }
 
     @OnClick(R.id.fabSend)
     public void postPage() {
 
-        if (TextUtils.isEmpty(mSectionId)) {
-            Toast.makeText(this, "section is null", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(mSectionId) && TextUtils.isEmpty(mSectionName)) {
+            Toast.makeText(this, "Section Identifier required", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -95,6 +108,11 @@ public class CreatePostActivity extends AppCompatActivity {
             return;
         }
 
+        if (!TextUtils.isEmpty(mSectionName)) {
+            createSectionAndPage(title, desc);
+            return;
+        }
+
         if (toLoadImage) {
             postPageWithImage(title, desc);
         } else {
@@ -102,17 +120,40 @@ public class CreatePostActivity extends AppCompatActivity {
         }
     }
 
+    private void createSectionAndPage(String title, String desc) {
+        togglePbVisibility(true);
+        ApiClient.apiService.createNewSection(mSectionName,
+                getHtmlRequestBody(title, desc),
+                new Callback<Envelope<Page>>() {
+                    @Override
+                    public void success(Envelope<Page> pageEnvelope, Response response) {
+                        togglePbVisibility(false);
+                        Log.d(TAG, "Successful response - " + response.getStatus());
+                        launchHome();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        togglePbVisibility(false);
+                        Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
+                    }
+                });
+    }
+
     private void postSimplePage(String title, String desc) {
+        togglePbVisibility(true);
         ApiClient.apiService.postSimplePage(mSectionId, getHtmlRequestBody(title, desc),
                 new Callback<Page>() {
                     @Override
                     public void success(Page page, Response response) {
+                        togglePbVisibility(false);
                         Log.d(TAG, "Successful response - " + page.title);
                         launchHome();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
+                        togglePbVisibility(false);
                         Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
                     }
                 });
@@ -168,6 +209,11 @@ public class CreatePostActivity extends AppCompatActivity {
         ivImg.setVisibility(toLoadImage ? View.VISIBLE : View.GONE);
     }
 
+    private void togglePbVisibility(boolean show) {
+        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        svContainer.setVisibility(!show ? View.VISIBLE : View.GONE);
+    }
+
     private void postPageWithImage(String title, String desc) {
 
         DateTime date = DateTime.now();
@@ -188,15 +234,18 @@ public class CreatePostActivity extends AppCompatActivity {
         TypedFile typedFile = new TypedFile("image/jpg", getImageFile());
         oneNotePartsMap.put(imagePartName, typedFile);
 
+        togglePbVisibility(true);
         ApiClient.apiService.postPageWithImages(mSectionId, oneNotePartsMap, new Callback<Envelope<Page>>() {
             @Override
             public void success(Envelope<Page> pageEnvelope, Response response) {
+                togglePbVisibility(false);
                 Log.d(TAG, "Successful response - " + response.getStatus());
                 launchHome();
             }
 
             @Override
             public void failure(RetrofitError error) {
+                togglePbVisibility(false);
                 Log.e(TAG, "Failed to post image - " + Log.getStackTraceString(error));
             }
         });

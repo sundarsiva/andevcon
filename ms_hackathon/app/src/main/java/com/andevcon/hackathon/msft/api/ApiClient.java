@@ -2,6 +2,7 @@ package com.andevcon.hackathon.msft.api;
 
 import com.andevcon.hackathon.msft.helpers.Constants;
 import com.andevcon.hackathon.msft.model.UsersValue;
+import com.microsoft.office365.connectmicrosoftgraph.vo.MessageWrapper;
 import com.microsoft.onenoteapi.service.OneNotePartsMap;
 import com.microsoft.onenotevos.Envelope;
 import com.microsoft.onenotevos.Page;
@@ -13,6 +14,7 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
+import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
@@ -79,6 +81,11 @@ public class ApiClient {
         @GET(GET_USERS)
         void getUsers(Callback<UsersValue> callback);
 
+        @POST("/me/microsoft.graph.sendmail")
+        void sendMail(
+                @Header("Content-type") String contentTypeHeader,
+                @Body MessageWrapper mail,
+                Callback<Void> callback);
     }
 
     public interface General {

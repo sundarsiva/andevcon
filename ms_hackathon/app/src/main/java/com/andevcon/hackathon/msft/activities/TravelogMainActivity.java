@@ -37,10 +37,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andevcon.hackathon.msft.R;
+import com.andevcon.hackathon.msft.adapters.FriendsListAdapter;
 import com.andevcon.hackathon.msft.api.ApiClient;
 import com.andevcon.hackathon.msft.fragments.PagesListFragment;
 import com.andevcon.hackathon.msft.helpers.DataStore;
@@ -83,6 +85,7 @@ public class TravelogMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             userName = bundle.getString(ARG_GIVEN_NAME);
@@ -105,6 +108,7 @@ public class TravelogMainActivity extends AppCompatActivity {
         }
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +158,8 @@ public class TravelogMainActivity extends AppCompatActivity {
                     @Override
                     public void success(UsersValue usersDTOs, Response response) {
                         DataStore.setUsersValue(usersDTOs);
+                        Intent intent = new Intent(getApplicationContext(), FriendsListActivity.class);
+                        startActivity(intent);
                         Toast.makeText(getApplicationContext(), String.valueOf(usersDTOs.getValue().size()), Toast.LENGTH_SHORT).show();
                     }
 
